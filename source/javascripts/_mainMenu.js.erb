@@ -17,12 +17,16 @@ BasicGame.MainMenu.prototype = {
 
     this.add.text(this.game.width / 2, 300, "zero", { font: "150px Roboto Mono", fill: "#222", align: "center"}).anchor.setTo(0.5, 0.5);
 
-    this.add.text(this.game.width / 2, 600, "connect digits until they sum up to zero", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 650, "game ends when time runs out", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 750, "every wrap around increases the selection's score", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 800, "you gain one extra second for each digit", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 600, "connect digits so they sum up to zero", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 650, "every carry increases the selection's score", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 700, "game ends when time runs out", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 800, "each selected digit gives 2 extra seconds but", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 850, "has a chance to create blockers", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
 
-    this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 350, "Tap/click game to start", { font: "50px Roboto Mono", fill: "#222" });
+    this.add.text(this.game.width / 2, 900, "prime length selections can clear blockers but", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 950, "do not give extra time", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+
+    this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 430, "tap/click to start", { font: "50px Roboto Mono", fill: "#222" });
     this.loadingText.anchor.setTo(0.5, 0.5);
     this.add.text(this.game.width / 2, this.game.height - 75, "Copyright (c) 2015 Bryan Bibat", { font: "20px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
     

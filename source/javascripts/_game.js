@@ -10,8 +10,9 @@ Cell = function (state, game, x, y) {
 
   this.circle = game.add.sprite(10 + (x * 120), 328 + (y * 120), 'circles');
   for (var i = 0; i < 9; i++) {
-    this.circle.animations.add('' + (i + 1), [ i ], 20, false);
+    this.circle.animations.add('' + (i + 1), [ i ]);
   }
+  this.circle.animations.add('x', [ 9 ]);
 
   this.roll();
   this.circle.inputEnabled = true;
@@ -20,24 +21,24 @@ Cell = function (state, game, x, y) {
   this.connector = game.add.sprite(x * 120, 320 + (y * 120), 'connectors');
   this.connector.scale.setTo(2, 2);
 
-  this.connector.animations.add('none', [ 0 ], 20, false);
-  this.connector.animations.add('dot', [ 1 ], 20, false);
-  this.connector.animations.add('up', [ 2 ], 20, false);
-  this.connector.animations.add('right', [ 3 ], 20, false);
-  this.connector.animations.add('down', [ 4 ], 20, false);
-  this.connector.animations.add('left', [ 5 ], 20, false);
-  this.connector.animations.add('up-right', [ 6 ], 20, false);
-  this.connector.animations.add('right-down', [ 7 ], 20, false);
-  this.connector.animations.add('down-left', [ 8 ], 20, false);
-  this.connector.animations.add('left-up', [ 9 ], 20, false);
-  this.connector.animations.add('up-down', [ 10 ], 20, false);
-  this.connector.animations.add('right-left', [ 11 ], 20, false);
-  this.connector.animations.add('right-up', [ 6 ], 20, false);
-  this.connector.animations.add('down-right', [ 7 ], 20, false);
-  this.connector.animations.add('left-down', [ 8 ], 20, false);
-  this.connector.animations.add('up-left', [ 9 ], 20, false);
-  this.connector.animations.add('down-up', [ 10 ], 20, false);
-  this.connector.animations.add('left-right', [ 11 ], 20, false);
+  this.connector.animations.add('none', [ 0 ]);
+  this.connector.animations.add('dot', [ 1 ]);
+  this.connector.animations.add('up', [ 2 ]);
+  this.connector.animations.add('right', [ 3 ]);
+  this.connector.animations.add('down', [ 4 ]);
+  this.connector.animations.add('left', [ 5 ]);
+  this.connector.animations.add('up-right', [ 6 ]);
+  this.connector.animations.add('right-down', [ 7 ]);
+  this.connector.animations.add('down-left', [ 8 ]);
+  this.connector.animations.add('left-up', [ 9 ]);
+  this.connector.animations.add('up-down', [ 10 ]);
+  this.connector.animations.add('right-left', [ 11 ]);
+  this.connector.animations.add('right-up', [ 6 ]);
+  this.connector.animations.add('down-right', [ 7 ]);
+  this.connector.animations.add('left-down', [ 8 ]);
+  this.connector.animations.add('up-left', [ 9 ]);
+  this.connector.animations.add('down-up', [ 10 ]);
+  this.connector.animations.add('left-right', [ 11 ]);
 
   this.tagged = false;
   this.prev = null;
@@ -58,7 +59,9 @@ Cell.prototype = {
   },
 
   click: function () {
-    if (!this.state.gameRunning) {
+    // ignore clicks when game is not running
+    // or when blockers are clicked
+    if (!this.state.gameRunning || this.value === 0) {
       return;
     }
 
@@ -195,43 +198,57 @@ BasicGame.Game.prototype = {
     this.tagEnd = null;
 
     this.score = 0;
-    this.timeLimit = 30;
+    this.timeLimit = 60;
 
-    this.add.text(180, 50, "SCORE", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-    this.add.text(780, 50, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(480, 80, "SUM", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
-    this.scoreText = this.add.text(180, 100, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
+    this.scoreText = this.add.text(180, 160, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
 
-    this.addScoreText = this.add.text(180, 100, "", { font: "40px 'Roboto Mono'", fill: "#090"});
+    this.addScoreText = this.add.text(180, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
     this.addScoreText.anchor.setTo(0.5, 0.5);
 
-    this.timeText = this.add.text(780, 100, this.timeLimit, { font: "60px Roboto Mono", fill: "#444"});
+    this.timeText = this.add.text(780, 160, this.timeLimit, { font: "60px Roboto Mono", fill: "#444"});
     this.timeText.anchor.setTo(0.5, 0.5);
 
-    this.addTimeText = this.add.text(780, 100, "", { font: "40px 'Roboto Mono'", fill: "#090"});
+    this.addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
     this.addTimeText.anchor.setTo(0.5, 0.5);
 
-    this.sumText = this.add.text(480, 180, '?', { font: "150px Roboto Mono", fill: "#222"});
+    this.sumText = this.add.text(480, 165, '?', { font: "150px Roboto Mono", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
 
-    this.pointsText = this.add.text(480, 270, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
+    this.pointsText = this.add.text(480, 250, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
     this.pointsText.anchor.setTo(0.5, 0.5);
 
-
     this.time.reset();
+
+    this.primeTable = [ false,
+      false, true, true, false, true, false, true, false, false, false,
+      true, false, true, false, false, false, true, false, true, false,
+      false, false, true, false, false, false, false, false, true, false,
+      true, false, false, false, false, false, true, false, false, false,
+      true, false, true, false, false, false, true, false, false, false,
+      false, false, true, false, false, false, false, false, true, false,
+      true, false, false, false
+    ];
+    this.blockers = [];
   },
 
   update: function () {
     var timeLeft = this.timeLimit - this.time.totalElapsedSeconds();
-    if (timeLeft > 0) {
+    if (timeLeft > 0 && this.blockers.length < 64) { 
       var text = Math.floor(timeLeft);
       if (text !== this.timeText.text) {
         this.timeText.text = text;
       }
     } else if (this.gameRunning) {
       this.gameRunning = false;
-      this.timeText.text = "0";
+
+      if (timeLeft <= 0) {
+        this.timeText.text = "0";
+      }
 
       this.overlay = this.add.sprite(0, 0, "overlay");
 
@@ -257,7 +274,6 @@ BasicGame.Game.prototype = {
       }, this);
     }
 
-    //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
   },
 
   checkSum: function () {
@@ -277,17 +293,24 @@ BasicGame.Game.prototype = {
       this.addScoreText.text = "+" + this.calculatePoints(sum);
       this.addScoreText.alpha = 1;
       this.addScoreText.y = 100;
-      this.add.tween(this.addScoreText).to( { alpha: 0, y: 20 }, 2000, Phaser.Easing.Linear.None, true);
+      this.add.tween(this.addScoreText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
 
-      this.timeLimit += length;
-
-      this.addTimeText.text = "+" + length;
-      this.addTimeText.alpha = 1;
-      this.addTimeText.y = 100;
-      this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 2000, Phaser.Easing.Linear.None, true);
 
       // TODO if prime, roll for removal of blocks but no bonus time
       // else, roll for creation of blocks
+
+      if (this.primeTable[length]) {
+        this.rollBlockRemoval(length);
+      } else {
+        this.rollBlockCreation(length);
+
+        this.timeLimit += length * 2;
+
+        this.addTimeText.text = "+" + length * 2;
+        this.addTimeText.alpha = 1;
+        this.addTimeText.y = 100;
+        this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
+      }
 
       cur = this.tagEnd;
       while (cur !== null) {
@@ -306,13 +329,63 @@ BasicGame.Game.prototype = {
         this.pointsText.text = "0 digits, 0 points";
       } else {
         this.sumText.text = sum % 10;
-        this.pointsText.text = length + " digit" + (length == 1 ? "" : "s") + ", " + this.calculatePoints(sum) + " point" + (this.calculatePoints(sum) == 1 ? "" : "s");
+        this.pointsText.text = length + " digit" + (length == 1 ? "" : "s") + 
+          (this.primeTable[length + 1] ? " (prime next)" : "") + ", " + 
+          this.calculatePoints(sum) + " point" + (this.calculatePoints(sum) == 1 ? "" : "s");
       }
     }
   },
 
   calculatePoints: function (sum) {
     return Math.pow(Math.floor(sum / 10), 3);
+  },
+
+  rollBlockRemoval: function (length) {
+    //console.log(this.blockers);
+    if (this.blockers.length === 0) {
+      return;
+    }
+    for (var i = 0; i < length; i++) {
+      // per digit, there's a 1 in 5 chance of removing a block
+      if (Math.random() * 5 < 1) {
+        var delIdx = Math.floor(Math.random() * this.blockers.length);
+        // reroll selected
+        this.blockers[delIdx].roll();
+        // remove from list
+        this.blockers.splice(delIdx, 1);
+        // TODO clearing graphic
+
+        if (this.blockers.length === 0) {
+          return;
+        }
+      }
+    }
+  },
+
+  rollBlockCreation: function (length) {
+    //console.log(this.blockers);
+    for (var i = 0; i < length; i++) {
+      // per digit, there's a 1 in 10 chance of removing a block
+      if (Math.random() * 10 < 1) {
+        var cell = null;
+        while (cell === null) {
+          var x = Math.floor(Math.random() * 8);
+          var y = Math.floor(Math.random() * 8);
+          if (this.grid[x][y].value !== 0) {
+            cell = this.grid[x][y];
+          }
+        }
+
+        cell.value = 0;
+        cell.circle.play('x');
+
+        this.blockers.push(cell);
+
+        if (this.blockers.length === 64) {
+          return;
+        }
+      }
+    }
   },
 
   quitGame: function (pointer) {

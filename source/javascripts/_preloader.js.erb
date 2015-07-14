@@ -56,7 +56,9 @@ BasicGame.Preloader.prototype = {
     //if (this.cache.isSoundDecoded('titleMusic') && this.ready == false)
     //{
     //  this.ready = true;
-    this.state.start('MainMenu');
+    this.time.events.add(500, function() {
+      this.state.start('MainMenu');
+    }, this);
     //}
 
   }
