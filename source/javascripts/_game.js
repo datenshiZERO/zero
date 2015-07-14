@@ -197,18 +197,28 @@ BasicGame.Game.prototype = {
     this.score = 0;
     this.timeLimit = 30;
 
-    this.scoreText = this.add.text(480, 80, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
+    this.add.text(180, 50, "SCORE", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(780, 50, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+
+    this.scoreText = this.add.text(180, 100, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
 
-    this.timeText = this.add.text(240, 200, this.timeLimit, { font: "100px Roboto Mono", fill: "#444"});
+    this.addScoreText = this.add.text(180, 100, "", { font: "40px 'Roboto Mono'", fill: "#090"});
+    this.addScoreText.anchor.setTo(0.5, 0.5);
+
+    this.timeText = this.add.text(780, 100, this.timeLimit, { font: "60px Roboto Mono", fill: "#444"});
     this.timeText.anchor.setTo(0.5, 0.5);
 
-    this.sumText = this.add.text(720, 200, '?', { font: "100px Roboto Mono", fill: "#222"});
+    this.addTimeText = this.add.text(780, 100, "", { font: "40px 'Roboto Mono'", fill: "#090"});
+    this.addTimeText.anchor.setTo(0.5, 0.5);
+
+    this.sumText = this.add.text(480, 180, '?', { font: "150px Roboto Mono", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
 
-    this.pointsText = this.add.text(720, 270, "(0)", { font: "30px Roboto Mono", fill: "#222"});
+    this.pointsText = this.add.text(480, 270, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
     this.pointsText.anchor.setTo(0.5, 0.5);
-    //this.lengthText = this.add.text(320, 50, "Length: 0", { font: "20px monospace", fill: "#222"});
+
+
     this.time.reset();
   },
 
@@ -261,14 +271,23 @@ BasicGame.Game.prototype = {
     }
     if (length > 1 && sum % 10 === 0) {
 
-      var score = Math.pow(Math.floor(sum / 10), 3);
-
-      this.score += score;
+      this.score += this.calculatePoints(sum);
       this.scoreText.text = this.score;
+
+      this.addScoreText.text = "+" + this.calculatePoints(sum);
+      this.addScoreText.alpha = 1;
+      this.addScoreText.y = 100;
+      this.add.tween(this.addScoreText).to( { alpha: 0, y: 20 }, 2000, Phaser.Easing.Linear.None, true);
 
       this.timeLimit += length;
 
-      // TODO if prime, raise to 4, double time bonus
+      this.addTimeText.text = "+" + length;
+      this.addTimeText.alpha = 1;
+      this.addTimeText.y = 100;
+      this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 2000, Phaser.Easing.Linear.None, true);
+
+      // TODO if prime, roll for removal of blocks but no bonus time
+      // else, roll for creation of blocks
 
       cur = this.tagEnd;
       while (cur !== null) {
@@ -280,21 +299,22 @@ BasicGame.Game.prototype = {
       this.tagEnd = null;
       
       this.sumText.text = "?";
-      this.pointsText.text = "(0)";
+      this.pointsText.text = "0 digits, 0 points";
     } else {
       if (sum === 0) {
         this.sumText.text = "?";
-        this.pointsText.text = "(0)";
+        this.pointsText.text = "0 digits, 0 points";
       } else {
         this.sumText.text = sum % 10;
-        this.pointsText.text = "(" + Math.pow(Math.floor(sum / 10) + 1, 3) + ")";
+        this.pointsText.text = length + " digit" + (length == 1 ? "" : "s") + ", " + this.calculatePoints(sum) + " point" + (this.calculatePoints(sum) == 1 ? "" : "s");
       }
     }
   },
 
-  showQuit: function () {
+  calculatePoints: function (sum) {
+    return Math.pow(Math.floor(sum / 10), 3);
   },
-  
+
   quitGame: function (pointer) {
 
     //  Here you should destroy anything you no longer need.
