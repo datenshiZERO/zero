@@ -195,7 +195,7 @@ BasicGame.Game.prototype = {
     this.tagEnd = null;
 
     this.score = 0;
-    this.timeLimit = 60;
+    this.timeLimit = 30;
 
     this.scoreText = this.add.text(480, 80, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
