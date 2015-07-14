@@ -216,7 +216,7 @@ BasicGame.Game.prototype = {
     this.addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
     this.addTimeText.anchor.setTo(0.5, 0.5);
 
-    this.sumText = this.add.text(480, 165, '?', { font: "150px Roboto Mono", fill: "#222"});
+    this.sumText = this.add.text(480, 165, '?', { font: "150px 'Roboto Mono'", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
 
     this.pointsText = this.add.text(480, 250, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
@@ -243,6 +243,14 @@ BasicGame.Game.prototype = {
       if (text !== this.timeText.text) {
         this.timeText.text = text;
       }
+
+      if (this.timeText.style.fill === '#444' && timeLeft < 16) {
+        this.timeText.style.fill = '#d44';
+        this.timeText.style.font = '700 65px Roboto Mono';
+      } else if (this.timeText.style.fill === '#d44' && timeLeft > 16) {
+        this.timeText.style.fill = '#444';
+        this.timeText.style.font = '60px Roboto Mono';
+      } 
     } else if (this.gameRunning) {
       this.gameRunning = false;
 
