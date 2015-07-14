@@ -1,3 +1,5 @@
+Store = new Persist.Store('High Score');
+
 Cell = function (state, game, x, y) {
   this.state = state;
   this.grid = state.grid;
@@ -6,7 +8,7 @@ Cell = function (state, game, x, y) {
   this.y = y;
 
 
-  this.circle = game.add.sprite(5 + (x * 60), 164 + (y * 60), 'circles');
+  this.circle = game.add.sprite(10 + (x * 120), 328 + (y * 120), 'circles');
   for (var i = 0; i < 9; i++) {
     this.circle.animations.add('' + (i + 1), [ i ], 20, false);
   }
@@ -15,7 +17,8 @@ Cell = function (state, game, x, y) {
   this.circle.inputEnabled = true;
   this.circle.events.onInputDown.add(this.click, this);
 
-  this.connector = game.add.sprite(x * 60, 160 + (y * 60), 'connectors');
+  this.connector = game.add.sprite(x * 120, 320 + (y * 120), 'connectors');
+  this.connector.scale.setTo(2, 2);
 
   this.connector.animations.add('none', [ 0 ], 20, false);
   this.connector.animations.add('dot', [ 1 ], 20, false);
@@ -60,18 +63,23 @@ Cell.prototype = {
     }
 
     if (this.state.taggingStarted) {
-      if (this.state.tagEnd === this) {
-        if (this.prev === null) {
+      var clicked = this;
+
+      if (this.state.tagEnd.prev === this) {
+        clicked = this.state.tagEnd;
+      }
+      if (this.state.tagEnd === clicked) {
+        if (clicked.prev === null) {
           this.state.taggingStarted = false;
           this.state.tagEnd = null;
-          this.tagged = false;
-          this.clearConnector();
+          clicked.tagged = false;
+          clicked.clearConnector();
         } else {
-          this.state.tagEnd = this.prev;
-          this.tagged = false;
-          this.prev.displayConnectorEnd();
-          this.prev = null;
-          this.clearConnector();
+          this.state.tagEnd = clicked.prev;
+          clicked.tagged = false;
+          clicked.prev.displayConnectorEnd();
+          clicked.prev = null;
+          clicked.clearConnector();
         }
       } else if (this.tagged === true) {
         return;
@@ -170,6 +178,9 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 
   create: function () {
+
+    this.stage.backgroundColor = '#ddd';
+
     this.grid = [];
     for (var x = 0; x < 8; x++) {
       var column = [];
@@ -186,24 +197,55 @@ BasicGame.Game.prototype = {
     this.score = 0;
     this.timeLimit = 60;
 
-    this.scoreText = this.add.text(20, 20, "Score: " + this.score, { font: "20px monospace", fill: "#fff"});
-    this.timeText = this.add.text(20, 50, "Time Left: ", { font: "20px monospace", fill: "#fff"});
-    this.sumText = this.add.text(320, 20, "Sum: 0", { font: "20px monospace", fill: "#fff"});
-    this.lengthText = this.add.text(320, 50, "Length: 0", { font: "20px monospace", fill: "#fff"});
-    this.messageText = this.add.text(20, 100, "", { font: "16px monospace", fill: "#fff"});
+    this.scoreText = this.add.text(480, 80, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
+    this.scoreText.anchor.setTo(0.5, 0.5);
+
+    this.timeText = this.add.text(240, 200, this.timeLimit, { font: "100px Roboto Mono", fill: "#444"});
+    this.timeText.anchor.setTo(0.5, 0.5);
+
+    this.sumText = this.add.text(720, 200, '?', { font: "100px Roboto Mono", fill: "#222"});
+    this.sumText.anchor.setTo(0.5, 0.5);
+
+    this.pointsText = this.add.text(720, 270, "(0)", { font: "30px Roboto Mono", fill: "#222"});
+    this.pointsText.anchor.setTo(0.5, 0.5);
+    //this.lengthText = this.add.text(320, 50, "Length: 0", { font: "20px monospace", fill: "#222"});
+    this.time.reset();
   },
 
   update: function () {
     var timeLeft = this.timeLimit - this.time.totalElapsedSeconds();
     if (timeLeft > 0) {
-      var text = "Time Left: " + Math.floor(timeLeft);
+      var text = Math.floor(timeLeft);
       if (text !== this.timeText.text) {
         this.timeText.text = text;
       }
-    } else {
+    } else if (this.gameRunning) {
       this.gameRunning = false;
-      this.timeText.text = "Time Left: 0";
-      this.messageText.text = "Game over";
+      this.timeText.text = "0";
+
+      this.overlay = this.add.sprite(0, 0, "overlay");
+
+      var highScore = Store.get("highScore");
+      if (highScore !== null) {
+        if (this.score > parseInt(highScore)) {
+          this.add.text(480, 580, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          Store.set("highScore", this.score);
+        }
+        this.add.text(480, 690, "Your previous high score was:", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 760, highScore, { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      } else {
+        this.add.text(480, 580, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        Store.set("highScore", this.score);
+      }
+      
+      this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+
+      this.time.events.add(2000, function () {
+        console.log("event fired");
+        this.add.text(480, 950, "Tap/click to return to main menu", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.overlay.inputEnabled = true;
+        this.overlay.events.onInputDown.add(this.quitGame, this);
+      }, this);
     }
 
     //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
@@ -220,16 +262,14 @@ BasicGame.Game.prototype = {
     }
     if (length > 1 && sum % 10 === 0) {
 
-      var score = Math.pow(sum / 10 + 1, 3);
+      var score = Math.pow(Math.floor(sum / 10), 3);
 
       this.score += score;
-      this.scoreText.text = "Score: " + this.score;
+      this.scoreText.text = this.score;
 
       this.timeLimit += length;
 
-      this.messageText.text = "Normal combo: " + score + " points, bonus " + length + " secs";
-
-      // if prime, raise to 4, double time bonus
+      // TODO if prime, raise to 4, double time bonus
 
       cur = this.tagEnd;
       while (cur !== null) {
@@ -239,12 +279,21 @@ BasicGame.Game.prototype = {
       }
       this.taggingStarted = false;
       this.tagEnd = null;
-      this.sumText.text = "Sum: 0";
-      this.lengthText.text = "Length: 0";
+      
+      this.sumText.text = "?";
+      this.pointsText.text = "(0)";
     } else {
-      this.sumText.text = "Sum: " + sum;
-      this.lengthText.text = "Length: " + length;
+      if (sum === 0) {
+        this.sumText.text = "?";
+        this.pointsText.text = "(0)";
+      } else {
+        this.sumText.text = sum % 10;
+        this.pointsText.text = "(" + Math.pow(Math.floor(sum / 10) + 1, 3) + ")";
+      }
     }
+  },
+
+  showQuit: function () {
   },
   
   quitGame: function (pointer) {
