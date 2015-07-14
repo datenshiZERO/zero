@@ -241,7 +241,6 @@ BasicGame.Game.prototype = {
       this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
       this.time.events.add(2000, function () {
-        console.log("event fired");
         this.add.text(480, 950, "Tap/click to return to main menu", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
         this.overlay.inputEnabled = true;
         this.overlay.events.onInputDown.add(this.quitGame, this);
