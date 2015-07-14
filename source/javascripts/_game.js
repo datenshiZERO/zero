@@ -12,7 +12,7 @@ Cell = function (state, game, x, y) {
   for (var i = 0; i < 9; i++) {
     this.circle.animations.add('' + (i + 1), [ i ]);
   }
-  this.circle.animations.add('x', [ 9 ]);
+  this.circle.animations.add('x', [ 9, 10, 9, 10, 9], 20);
 
   this.roll();
   this.circle.inputEnabled = true;
@@ -39,6 +39,7 @@ Cell = function (state, game, x, y) {
   this.connector.animations.add('up-left', [ 9 ]);
   this.connector.animations.add('down-up', [ 10 ]);
   this.connector.animations.add('left-right', [ 11 ]);
+  this.connector.animations.add('blink', [ 13, 12, 13, 12, 0 ], 20);
 
   this.tagged = false;
   this.prev = null;
@@ -54,7 +55,7 @@ Cell.prototype = {
   reroll: function() {
     this.prev = null;
     this.tagged = false;
-    this.clearConnector();
+    this.connector.play('blink');
     this.roll();
   },
 
