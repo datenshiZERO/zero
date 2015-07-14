@@ -304,6 +304,17 @@ BasicGame.Game.prototype = {
       this.addScoreText.y = 100;
       this.add.tween(this.addScoreText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
 
+      cur = this.tagEnd;
+      while (cur !== null) {
+        var prev = cur.prev;
+        cur.reroll();
+        cur = prev;
+      }
+      this.taggingStarted = false;
+      this.tagEnd = null;
+      
+      this.sumText.text = "?";
+      this.pointsText.text = "0 digits, 0 points";
 
       // TODO if prime, roll for removal of blocks but no bonus time
       // else, roll for creation of blocks
@@ -320,18 +331,6 @@ BasicGame.Game.prototype = {
         this.addTimeText.y = 100;
         this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
       }
-
-      cur = this.tagEnd;
-      while (cur !== null) {
-        var prev = cur.prev;
-        cur.reroll();
-        cur = prev;
-      }
-      this.taggingStarted = false;
-      this.tagEnd = null;
-      
-      this.sumText.text = "?";
-      this.pointsText.text = "0 digits, 0 points";
     } else {
       if (sum === 0) {
         this.sumText.text = "?";
