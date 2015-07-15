@@ -224,6 +224,20 @@ BasicGame.Game.prototype = {
     this.score = 0;
     this.timeLimit = 60;
 
+    this.prevHighScore = Store.get("highScore");
+    if (this.prevHighScore === null) {
+      this.prevHighScore = 0;
+    } else {
+      this.prevHighScore = parseInt(this.prevHighScore);
+    }
+
+    this.prevBestTime = Store.get("bestTime");
+    if (this.prevBestTime === null) {
+      this.prevBestTime = 60.0;
+    } else {
+      this.prevBestTime = parseFloat(this.prevBestTime);
+    }
+
     this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"});
     this.scoreHeader.anchor.setTo(0.5, 0.5);
     this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
@@ -292,26 +306,15 @@ BasicGame.Game.prototype = {
       var finalTimeText = this.add.text(480, 480, "Time: " + this.timeToText(this.timeLimit), { font: "42px Roboto Mono", fill: "#222"});
       finalTimeText.anchor.setTo(0.5, 0.5);
 
-      var highScore = Store.get("highScore");
-      if (highScore === null) {
-        highScore = 0;
-      }
       var newHighScore = false;
-      if (highScore !== null && this.score > parseInt(highScore)) {
-        Store.set("highScore", this.score);
+      if (this.score > this.prevHighScore) {
         newHighScore = true;
       }
-      
-      var bestTime = Store.get("bestTime");
-      if (bestTime === null) {
-        bestTime = 0;
-      }
       var newBestTime = false;
-      if (bestTime !== null && this.timeLimit > parseFloat(bestTime)) {
-        Store.set("bestTime", this.timeLimit);
+      if (this.timeLimit > this.prevBestTime) {
         newBestTime = true;
       }
-
+      
       if (newHighScore) {
         if (newBestTime) {
           this.add.text(480, 575, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
@@ -326,8 +329,8 @@ BasicGame.Game.prototype = {
       }
 
       this.add.text(480, 750, "Previous Bests: ", { font: "36px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-      this.add.text(480, 800, "High Score: " + highScore, { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-      this.add.text(480, 840, "Best Time: " + this.timeToText(bestTime), { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 800, "High Score: " + this.prevHighScore, { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 840, "Best Time: " + this.timeToText(this.prevBestTime), { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
       this.time.events.add(1000, function () {
         this.add.text(480, 950, "Tap/click to return to main menu", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
@@ -350,6 +353,7 @@ BasicGame.Game.prototype = {
     if (length > 1 && sum % 10 === 0) {
 
       this.score += this.calculatePoints(sum);
+      
       if (this.score < 1000000) {
         this.scoreText.text = this.score;
       } else {
@@ -359,6 +363,10 @@ BasicGame.Game.prototype = {
           this.scoreHeader.text = "PLEASE STOP";
         }
         this.displayColoredScore();
+      }
+
+      if (this.score > this.prevHighScore) {
+        Store.set("highScore", this.score);
       }
 
       this.addScoreText.text = "+" + this.calculatePoints(sum);
@@ -400,6 +408,10 @@ BasicGame.Game.prototype = {
 
         this.addTimeText.text = "+" + length * 2;
       }
+      if (this.timeLimit > this.prevBestTime) {
+        Store.set("bestTime", this.timeLimit);
+      }
+
       this.addTimeText.alpha = 1;
       this.addTimeText.y = 100;
       this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
