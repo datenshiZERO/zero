@@ -65,7 +65,6 @@ Cell.prototype = {
     if (!this.state.gameRunning || this.value === 0) {
       return;
     }
-
     if (this.state.taggingStarted) {
       var clicked = this;
 
@@ -73,6 +72,7 @@ Cell.prototype = {
         clicked = this.state.tagEnd;
       }
       if (this.state.tagEnd === clicked) {
+        this.displayRipple();
         if (clicked.prev === null) {
           this.state.taggingStarted = false;
           this.state.tagEnd = null;
@@ -88,6 +88,7 @@ Cell.prototype = {
       } else if (this.tagged === true) {
         return;
       } else if (this.adjacentTo(this.state.tagEnd)) {
+        this.displayRipple();
         this.prev = this.state.tagEnd;
         this.prev.displayConnectorMid(this);
         this.state.tagEnd = this;
@@ -95,6 +96,7 @@ Cell.prototype = {
         this.tagged = true;
       }
     } else {
+      this.displayRipple();
       this.state.taggingStarted = true;
       this.state.tagEnd = this;
       this.tagged = true;
@@ -170,6 +172,20 @@ Cell.prototype = {
 
   topOf: function(other) {
     return (this.y === other.y - 1 && this.x === other.x);
+  },
+
+  displayRipple: function() {
+    var ripple = this.state.ripples.getFirstExists(false);
+    ripple.reset(this.x * 120 + 60, 380 + (this.y * 120));
+    ripple.alpha = 1;
+    ripple.scale.setTo(0.5, 0.5);
+    console.log(ripple);
+    this.game.add.tween(ripple).to( { alpha: 0 }, 800 ).start();
+    var tween = this.game.add.tween(ripple.scale).to( { x: 2.5, y: 2.5 }, 800 ).start();
+    tween.onComplete.add(function() {
+      console.log(this);
+      this.kill();
+    }, ripple);
   }
 
 };
@@ -194,6 +210,12 @@ BasicGame.Game.prototype = {
       }
       this.grid.push(column);
     }
+
+    this.ripples = this.add.group();
+    this.ripples.createMultiple(10, 'ripple');
+    this.ripples.setAll('anchor.x', 0.5);
+    this.ripples.setAll('anchor.y', 0.5);
+
     this.gameRunning = true;
     this.taggingStarted = false;
     this.tagEnd = null;
@@ -321,16 +343,20 @@ BasicGame.Game.prototype = {
 
       if (this.primeTable[length]) {
         this.rollBlockRemoval(length);
+
+        this.timeLimit += length / 2;
+
+        this.addTimeText.text = "+" + Math.floor(length / 2);
       } else {
         this.rollBlockCreation(length);
 
-        this.timeLimit += length * 3;
+        this.timeLimit += length * 2;
 
-        this.addTimeText.text = "+" + length * 3;
-        this.addTimeText.alpha = 1;
-        this.addTimeText.y = 100;
-        this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
+        this.addTimeText.text = "+" + length * 2;
       }
+      this.addTimeText.alpha = 1;
+      this.addTimeText.y = 100;
+      this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
     } else {
       if (sum === 0) {
         this.sumText.text = "?";
