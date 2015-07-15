@@ -181,15 +181,7 @@ Cell.prototype = {
   displayRipple: function() {
     var ripple = this.state.ripples.getFirstExists(false);
     ripple.reset(this.x * 120 + 60, 380 + (this.y * 120));
-    ripple.alpha = 1;
-    ripple.scale.setTo(0.5, 0.5);
-    console.log(ripple);
-    this.game.add.tween(ripple).to( { alpha: 0 }, 800 ).start();
-    var tween = this.game.add.tween(ripple.scale).to( { x: 2.5, y: 2.5 }, 800 ).start();
-    tween.onComplete.add(function() {
-      console.log(this);
-      this.kill();
-    }, ripple);
+    ripple.play('ripple', 10, false, true);
   }
 
 };
@@ -219,6 +211,9 @@ BasicGame.Game.prototype = {
     this.ripples.createMultiple(10, 'ripple');
     this.ripples.setAll('anchor.x', 0.5);
     this.ripples.setAll('anchor.y', 0.5);
+    this.ripples.forEach(function (ripple) {
+      ripple.animations.add('ripple', [ 0, 1, 2, 3, 4, 5, 6, 7]);
+    }, this);
 
     this.gameRunning = true;
     this.taggingStarted = false;
