@@ -284,20 +284,46 @@ BasicGame.Game.prototype = {
 
       this.overlay = this.add.sprite(0, 0, "overlay");
 
+      this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      var finalTimeText = this.add.text(480, 480, "Time: " + this.timeToText(this.timeLimit), { font: "42px Roboto Mono", fill: "#222"});
+      finalTimeText.anchor.setTo(0.5, 0.5);
+
       var highScore = Store.get("highScore");
-      if (highScore !== null) {
-        if (this.score > parseInt(highScore)) {
-          this.add.text(480, 580, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-          Store.set("highScore", this.score);
-        }
-        this.add.text(480, 690, "Your previous high score was:", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-        this.add.text(480, 760, highScore, { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-      } else {
-        this.add.text(480, 580, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      if (highScore === null) {
+        highScore = 0;
+      }
+      var newHighScore = false;
+      if (highScore !== null && this.score > parseInt(highScore)) {
         Store.set("highScore", this.score);
+        newHighScore = true;
       }
       
-      this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      var bestTime = Store.get("bestTime");
+      if (bestTime === null) {
+        bestTime = 0;
+      }
+      var newBestTime = false;
+      if (bestTime !== null && this.timeLimit > parseFloat(bestTime)) {
+        Store.set("bestTime", this.timeLimit);
+        newBestTime = true;
+      }
+
+      if (newHighScore) {
+        if (newBestTime) {
+          this.add.text(480, 575, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 625, "New Best Time!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        } else {
+          this.add.text(480, 600, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        }
+      } else if (newBestTime) {
+        this.add.text(480, 600, "New Best Time!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      } else {
+        finalTimeText.y = 580;
+      }
+
+      this.add.text(480, 750, "Previous Bests: ", { font: "36px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 800, "High Score: " + highScore, { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 840, "Best Time: " + this.timeToText(bestTime), { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
       this.time.events.add(1000, function () {
         this.add.text(480, 950, "Tap/click to return to main menu", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
@@ -427,6 +453,23 @@ BasicGame.Game.prototype = {
         }
       }
     }
+  },
+
+  timeToText: function (seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var remainingSecs = seconds - hours * 3600;
+    var minutes = Math.floor(remainingSecs / 60);
+    remainingSecs = remainingSecs - minutes * 60;
+    var ms = remainingSecs % 1;
+    remainingSecs = Math.floor(remainingSecs);
+
+    var text = "";
+    if (hours > 0) {
+      text += hours + ":";
+    }
+    text += ("0" + minutes).slice(-2)  + ":";
+    text += ("0" + Math.floor(remainingSecs)).slice(-2)  + "." + Math.floor(ms * 10);
+    return text;
   },
 
   quitGame: function (pointer) {
