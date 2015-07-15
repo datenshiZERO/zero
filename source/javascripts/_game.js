@@ -55,7 +55,11 @@ Cell.prototype = {
   reroll: function() {
     this.prev = null;
     this.tagged = false;
-    this.connector.play('blink');
+    if (this.game.device.desktop) {
+      this.connector.play('blink');
+    } else {
+      this.connector.play('none');
+    }
     this.roll();
   },
 
