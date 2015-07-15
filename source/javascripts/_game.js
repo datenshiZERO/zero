@@ -457,8 +457,8 @@ BasicGame.Game.prototype = {
   rollBlockCreation: function (length) {
     //console.log(this.blockers);
     for (var i = 0; i < length; i++) {
-      // per digit, there's a 1 in 10 chance of removing a block
-      if (Math.random() * 10 < 1) {
+      // per digit, there's a 1 in 5 chance of removing a block
+      if (Math.random() * 6 < 1) {
         var cell = null;
         while (cell === null) {
           var x = Math.floor(Math.random() * 8);
