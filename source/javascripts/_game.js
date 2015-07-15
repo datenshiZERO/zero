@@ -180,8 +180,10 @@ Cell.prototype = {
 
   displayRipple: function() {
     var ripple = this.state.ripples.getFirstExists(false);
-    ripple.reset(this.x * 120 + 60, 380 + (this.y * 120));
-    ripple.play('ripple', 10, false, true);
+    if (ripple !== null) {
+      ripple.reset(this.x * 120 + 60, 380 + (this.y * 120));
+      ripple.play('ripple', 10, false, true);
+    }
   }
 
 };
@@ -325,6 +327,11 @@ BasicGame.Game.prototype = {
       this.addScoreText.y = 100;
       this.add.tween(this.addScoreText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
 
+      // clear all ripple animations and reroll cells
+      this.ripples.forEachAlive(function(ripple) {
+        ripple.kill();
+      }, this);
+
       cur = this.tagEnd;
       while (cur !== null) {
         var prev = cur.prev;
@@ -334,6 +341,7 @@ BasicGame.Game.prototype = {
       this.taggingStarted = false;
       this.tagEnd = null;
       
+
       this.sumText.text = "?";
       this.pointsText.text = "0 digits, 0 points";
 
