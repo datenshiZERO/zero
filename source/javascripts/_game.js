@@ -224,12 +224,14 @@ BasicGame.Game.prototype = {
     this.score = 0;
     this.timeLimit = 60;
 
-    this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"});
+    this.scoreHeader.anchor.setTo(0.5, 0.5);
     this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
     this.add.text(480, 80, "SUM", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
     this.scoreText = this.add.text(180, 160, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
+
 
     this.addScoreText = this.add.text(180, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
     this.addScoreText.anchor.setTo(0.5, 0.5);
@@ -257,6 +259,8 @@ BasicGame.Game.prototype = {
       false, false, true, false, false, false, false, false, true, false,
       true, false, false, false
     ];
+    this.colorTable = [ "#444", "#41dbdb", "#b40561", "#9cff2e", "#710a92",
+      "#f8ed2d", "#501095", "#febd2e", "#2b1e98", "#fe642c" ];
     this.blockers = [];
   },
 
@@ -346,7 +350,16 @@ BasicGame.Game.prototype = {
     if (length > 1 && sum % 10 === 0) {
 
       this.score += this.calculatePoints(sum);
-      this.scoreText.text = this.score;
+      if (this.score < 1000000) {
+        this.scoreText.text = this.score;
+      } else {
+        if (this.score <= 9999999999) {
+          this.scoreHeader.text = "CONGRATULATIONS!";
+        } else {
+          this.scoreHeader.text = "PLEASE STOP";
+        }
+        this.displayColoredScore();
+      }
 
       this.addScoreText.text = "+" + this.calculatePoints(sum);
       this.addScoreText.alpha = 1;
@@ -470,6 +483,26 @@ BasicGame.Game.prototype = {
     text += ("0" + minutes).slice(-2)  + ":";
     text += ("0" + Math.floor(remainingSecs)).slice(-2)  + "." + Math.floor(ms * 10);
     return text;
+  },
+
+  displayColoredScore: function () {
+    if (this.scoreText.text !== "") {
+      this.scoreText.text = "";
+    }
+    if (this.milText === undefined || this.milText === null || !this.milText[0].alive) {
+      this.milText = [];
+      for (var i = 0; i < 10; i++) {
+        var text = this.add.text(180, 160, "", { font: "700 64px 'Roboto Mono'", fill: "#444"});
+        text.anchor.setTo(0.5, 0.5);
+        this.milText.push(text);
+      }
+    }
+    var scoreStr = "" + this.score;
+    for (var j = 0; j < 10 && j < scoreStr.length; j++) {
+      this.milText[j].x = 160 + (scoreStr.length / 2 * 38) - (j * 38);
+      this.milText[j].style.fill = this.colorTable[Math.floor(Math.random() * 10)];
+      this.milText[j].text = scoreStr.substr(scoreStr.length - 1 - j, 1);
+    }
   },
 
   quitGame: function (pointer) {
