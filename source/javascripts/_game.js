@@ -429,7 +429,7 @@ BasicGame.Game.prototype = {
   },
 
   calculatePoints: function (sum) {
-    return Math.pow(Math.floor(sum / 10), 3);
+    return Math.pow(Math.floor(sum / 10), 3) * 5;
   },
 
   rollBlockRemoval: function (length) {
