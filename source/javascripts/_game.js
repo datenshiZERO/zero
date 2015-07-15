@@ -324,9 +324,9 @@ BasicGame.Game.prototype = {
       } else {
         this.rollBlockCreation(length);
 
-        this.timeLimit += length * 2;
+        this.timeLimit += length * 3;
 
-        this.addTimeText.text = "+" + length * 2;
+        this.addTimeText.text = "+" + length * 3;
         this.addTimeText.alpha = 1;
         this.addTimeText.y = 100;
         this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
