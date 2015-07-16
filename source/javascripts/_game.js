@@ -222,7 +222,7 @@ BasicGame.Game.prototype = {
     this.tagEnd = null;
 
     this.score = 0;
-    this.timeLimit = 60;
+    this.timeLimit = 60.0;
 
     this.prevHighScore = Store.get("highScore");
     if (this.prevHighScore === null) {
@@ -237,6 +237,9 @@ BasicGame.Game.prototype = {
     } else {
       this.prevBestTime = parseFloat(this.prevBestTime);
     }
+
+    this.prevMillionTime = Store.get("bestMillionTime");
+    this.millionTime = null;
 
     this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"});
     this.scoreHeader.anchor.setTo(0.5, 0.5);
@@ -303,8 +306,18 @@ BasicGame.Game.prototype = {
       this.overlay = this.add.sprite(0, 0, "overlay");
 
       this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-      var finalTimeText = this.add.text(480, 480, "Time: " + this.timeToText(this.timeLimit), { font: "42px Roboto Mono", fill: "#222"});
-      finalTimeText.anchor.setTo(0.5, 0.5);
+      
+      var runText = null;
+      var milText = null;
+      if (this.millionTime !== null) { 
+        runText = this.add.text(480, 463, "Run Time - " + this.timeToText(this.timeLimit), { font: "30px Roboto Mono", fill: "#222"});
+        runText.anchor.setTo(0.5, 0.5);
+        milText = this.add.text(480, 497, "Million reached at " + this.timeToText(this.millionTime), { font: "30px Roboto Mono", fill: "#222"});
+        milText.anchor.setTo(0.5, 0.5);
+      } else {
+        runText = this.add.text(480, 480, "Run Time: " + this.timeToText(this.timeLimit), { font: "36px Roboto Mono", fill: "#222"});
+        runText.anchor.setTo(0.5, 0.5);
+      }
 
       var newHighScore = false;
       if (this.score > this.prevHighScore) {
@@ -314,26 +327,58 @@ BasicGame.Game.prototype = {
       if (this.timeLimit > this.prevBestTime) {
         newBestTime = true;
       }
+      var newMillionTime = false;
+      if (this.millionTime !== null && 
+          ( (this.prevMillionTime !== null && parseFloat(this.prevMillionTime) > this.millionTime) ||
+            (this.prevMillionTime === null) ) ) {
+        Store.set("bestMillionTime", this.millionTime);
+        newMillionTime = true;
+      }
       
       if (newHighScore) {
         if (newBestTime) {
-          this.add.text(480, 575, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-          this.add.text(480, 625, "New Best Time!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          if (newMillionTime) {
+            this.add.text(480, 570, "New High Score!", { font: "44px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+            this.add.text(480, 620, "New Longest Run!", { font: "44px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+            this.add.text(480, 670, "New Fastest Million!", { font: "44px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          } else {
+            this.add.text(480, 595, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+            this.add.text(480, 645, "New Longest Run!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          }
         } else {
-          this.add.text(480, 600, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          if (newMillionTime) {
+            this.add.text(480, 595, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+            this.add.text(480, 645, "New Fastest Million!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          } else {
+            this.add.text(480, 620, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          }
         }
       } else if (newBestTime) {
-        this.add.text(480, 600, "New Best Time!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        if (newMillionTime) {
+          this.add.text(480, 595, "New Longest Run!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 645, "New Fastest Million!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        } else {
+          this.add.text(480, 620, "New Longest Run!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        }
+      } else if (newMillionTime) {
+        this.add.text(480, 620, "New Fastest Million!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
       } else {
-        finalTimeText.y = 580;
+        runText.y += 100;
+        if (milText !== null) {
+          milText.y += 100;
+        }
       }
 
-      this.add.text(480, 750, "Previous Bests: ", { font: "36px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-      this.add.text(480, 800, "High Score: " + this.prevHighScore, { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-      this.add.text(480, 840, "Best Time: " + this.timeToText(this.prevBestTime), { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 770, "Previous Bests", { font: "40px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 820, "High Score - " + this.prevHighScore, { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+
+      if (this.prevMillionTime !== null) {
+        this.add.text(480, 880, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      }
 
       this.time.events.add(1000, function () {
-        this.add.text(480, 950, "Tap/click to return to main menu", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 960, "Tap/click to return to main menu", { font: "32px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
         this.overlay.inputEnabled = true;
         this.overlay.events.onInputDown.add(this.quitGame, this);
       }, this);
@@ -357,6 +402,9 @@ BasicGame.Game.prototype = {
       if (this.score < 1000000) {
         this.scoreText.text = this.score;
       } else {
+        if (this.millionTime === null) {
+          this.millionTime = this.time.totalElapsedSeconds();
+        }
         if (this.score <= 9999999999) {
           this.scoreHeader.text = "CONGRATULATIONS!";
         } else {
@@ -398,7 +446,8 @@ BasicGame.Game.prototype = {
       if (this.primeTable[length]) {
         this.rollBlockRemoval(length);
 
-        this.timeLimit += length / 2;
+        this.timeLimit += length * 1.0 / 2;
+        console.log(this.timeLimit);
 
         this.addTimeText.text = "+" + Math.floor(length / 2);
       } else {
@@ -493,7 +542,7 @@ BasicGame.Game.prototype = {
       text += hours + ":";
     }
     text += ("0" + minutes).slice(-2)  + ":";
-    text += ("0" + Math.floor(remainingSecs)).slice(-2)  + "." + Math.floor(ms * 10);
+    text += ("0" + Math.floor(remainingSecs)).slice(-2)  + "." + ("0" + Math.floor(ms * 10)).slice(-1);
     return text;
   },
 
