@@ -40,7 +40,6 @@ Cell = function (state, game, x, y) {
   this.connector.animations.add('up-left', [ 9 ]);
   this.connector.animations.add('down-up', [ 10 ]);
   this.connector.animations.add('left-right', [ 11 ]);
-  this.connector.animations.add('blink', [ 13, 12, 13, 12, 0 ], 20);
 
   this.tagged = false;
   this.prev = null;
