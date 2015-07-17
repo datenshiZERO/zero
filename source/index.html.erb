@@ -17,6 +17,14 @@
   <%= favicon_tag 'images/favicon.ico' %>
 </head>
 <body>
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4&appId=944062788970440";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
 
   <h1>zero - a mathematical puzzle game</h1>
 
@@ -51,13 +59,13 @@
 
   <p>Random clicking is an important part of the gameplay. Use whenever you need a lot of time.
   
-  <p>The points you get from random clicking is (on the average) nowhere near what you get from carefully extending your chain so the former should not be your main strategy if you're going for good million times.</p>
+  <p>The points you get from random clicking is (on the average) nowhere near what you get from carefully extending your chain so the former should not be your only strategy if you're going for good million times.</p>
 
   <p>Dragging the chain is faster than clicking for both extending the chain and backtracking.</p>
 
   <p>There are only a few combinations for 2 and 3 length chains. Remembering them will allow you to clear a few blockers without spending too much time.</p>
 
-  <p>The expected score for a full 64-length chain on a grid with even distribution of numbers from 1-9 only gives 163,840 points. Raising the average by even a small value can dramatically increase that score.</p>
+  <p>The expected score for a full 64-length chain on a grid with even distribution of numbers from 1-9 only gives 163,840 points. Raising the average by even a small value can significantly increase that score.</p>
 
   <h2>Planned features</h2>
 
@@ -75,10 +83,22 @@
 
   <p>Initial playtesting and player input by the #gaming Slack channel of the <a href="https://www.facebook.com/groups/phackers/">Phillippine Tech Hackers</a> community. Additional input from /r/WebGames and Hacker News.</p>
 
+  <h3>Obligatory Social Buttons</h3>
 
+  <p><div class="fb-share-button" data-href="https://zero.karaniwan.org" data-layout="button_count"></div></p>
 
+  <p><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://zero.karaniwan.org" data-text="Looking for a distraction? Try out &quot;zero&quot;, a simple mathematical puzzle game." data-via="bry_bibat">Tweet</a></p>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
+  <p><a class="tumblr-share-button" data-color="blue" data-notes="right" href="https://embed.tumblr.com/share"></a></p>
+  <script>!function(d,s,id){var js,ajs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://secure.assets.tumblr.com/share-button.js";ajs.parentNode.insertBefore(js,ajs);}}(document, "script", "tumblr-js");</script>
 
+  <p><a href="//www.pinterest.com/pin/create/button/" data-pin-do="buttonBookmark"  data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a></p>
+<!-- Please call pinit.js only once per page -->
+<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
+
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <g:plusone></g:plusone>
 
   <%= javascript_include_tag 'main' %>
 <% if build? %>
