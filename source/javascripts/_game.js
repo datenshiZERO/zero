@@ -222,7 +222,7 @@ BasicGame.Game.prototype = {
     this.tagEnd = null;
 
     this.score = 0;
-    this.timeLimit = 60.0;
+    this.timeLimit = 90.0;
 
     this.prevHighScore = Store.get("highScore");
     if (this.prevHighScore === null) {
@@ -235,7 +235,7 @@ BasicGame.Game.prototype = {
 
     this.prevBestTime = Store.get("bestTime");
     if (this.prevBestTime === null) {
-      this.prevBestTime = 60.0;
+      this.prevBestTime = 90.0;
     } else {
       this.prevBestTime = parseFloat(this.prevBestTime);
     }
