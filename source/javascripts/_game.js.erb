@@ -729,7 +729,7 @@ BasicGame.Game.prototype = {
     var fullUrl, ogUrl, text, url, icon;
 
     url = encodeURIComponent("http://zero.karaniwan.org/");
-    ogUrl = encodeURIComponent("http://zero.karaniwan.org/<%= image_path "screenshot.png" %>");
+    ogUrl = encodeURIComponent("http://zero.karaniwan.org<%= image_path "screenshot.png" %>");
 
     text = encodeURIComponent("I got " + this.score + " points in \"zero\", a mathematical puzzle game. Try beating my score!");
 
