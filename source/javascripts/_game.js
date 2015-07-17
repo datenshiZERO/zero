@@ -333,7 +333,13 @@ BasicGame.Game.prototype = {
     if (y < 320) {
       return null;
     }
-    return this.grid[Math.floor(x / 120)][Math.floor( (y - 320) / 120)];
+    var newX = Math.floor(x/120);
+    var newY = Math.floor((y-320)/120);
+    if (newX >= 0 && newX < 8 && newY >= 0 && newX < 8) {
+      return this.grid[newX][newY];
+    } else {
+      return null;
+    }
   },
 
   checkSum: function () {
