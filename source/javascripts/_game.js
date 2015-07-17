@@ -231,6 +231,8 @@ BasicGame.Game.prototype = {
       this.prevHighScore = parseInt(this.prevHighScore);
     }
 
+    this.curHighScore = this.prevHighScore;
+
     this.prevBestTime = Store.get("bestTime");
     if (this.prevBestTime === null) {
       this.prevBestTime = 60.0;
@@ -241,10 +243,13 @@ BasicGame.Game.prototype = {
     this.prevMillionTime = Store.get("bestMillionTime");
     this.millionTime = null;
 
+    this.highScoreText = this.add.text(480, 55, "HIGH SCORE: " + this.prevHighScore, { font: "30px Roboto Mono", fill: "#222"});
+    this.highScoreText.anchor.setTo(0.5, 0.5);
+
     this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"});
     this.scoreHeader.anchor.setTo(0.5, 0.5);
     this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-    this.add.text(480, 80, "SUM", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(480, 110, "SUM", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
     this.scoreText = this.add.text(180, 160, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
@@ -254,6 +259,7 @@ BasicGame.Game.prototype = {
     this.timeText.anchor.setTo(0.5, 0.5);
 
     this.addScoreGroup = this.add.group();
+    this.highScoreGroup = this.add.group();
     this.addTimeGroup = this.add.group();
     this.resultGroup = this.add.group();
     this.result2Group = this.add.group();
@@ -262,6 +268,11 @@ BasicGame.Game.prototype = {
       addScoreText.anchor.setTo(0.5, 0.5);
       addScoreText.kill();
       this.addScoreGroup.add(addScoreText);
+
+      var highScoreText = this.add.text(180, 55, "", { font: "30px 'Roboto Mono'", fill: "#080"});
+      highScoreText.anchor.setTo(0.5, 0.5);
+      highScoreText.kill();
+      this.highScoreGroup.add(highScoreText);
 
       var addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
       addTimeText.anchor.setTo(0.5, 0.5);
@@ -279,10 +290,10 @@ BasicGame.Game.prototype = {
       this.result2Group.add(result2Text);
     }
 
-    this.sumText = this.add.text(480, 165, '?', { font: "150px 'Roboto Mono'", fill: "#222"});
+    this.sumText = this.add.text(480, 190, '?', { font: "150px 'Roboto Mono'", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
 
-    this.pointsText = this.add.text(480, 250, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
+    this.pointsText = this.add.text(480, 270, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
     this.pointsText.anchor.setTo(0.5, 0.5);
 
     this.time.reset();
@@ -384,8 +395,20 @@ BasicGame.Game.prototype = {
         this.displayColoredScore();
       }
 
-      if (this.score > this.prevHighScore) {
+      if (this.score > this.curHighScore) {
         Store.set("highScore", this.score);
+        this.highScoreText.text = "HIGH SCORE: " + this.score;
+        var highScoreText = this.highScoreGroup.getFirstExists(false);
+        if (highScoreText !== null) {
+          highScoreText.reset(480, 55);
+          highScoreText.text = "            +" + (this.score - this.curHighScore);
+          highScoreText.alpha = 1;
+          var tween0 = this.add.tween(highScoreText).to( { alpha: 0, y: -25 }, 3000, Phaser.Easing.Linear.None, true);
+          tween0.onComplete.add(function(text) {
+            text.kill();
+          }, this);
+        }
+        this.curHighScore = this.score;
       }
 
       var addScoreText = this.addScoreGroup.getFirstExists(false);
