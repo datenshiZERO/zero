@@ -7,8 +7,8 @@ Cell = function (state, game, x, y) {
   this.x = x;
   this.y = y;
 
-
-  this.circle = game.add.sprite(10 + (x * 120), 328 + (y * 120), 'circles');
+  this.circle = game.add.sprite(60 + (x * 120), 378 + (y * 120), 'circles');
+  this.circle.anchor.setTo(0.5, 0.5);
   for (var i = 0; i < 9; i++) {
     this.circle.animations.add('' + (i + 1), [ i ]);
   }
@@ -52,15 +52,13 @@ Cell.prototype = {
     this.circle.play('' + this.value);
   },
 
-  reroll: function() {
+  reroll: function(delay) {
+    this.connector.play('none');
+    this.roll();
     this.prev = null;
     this.tagged = false;
-    if (this.game.device.desktop) {
-      this.connector.play('blink');
-    } else {
-      this.connector.play('none');
-    }
-    this.roll();
+    this.circle.scale.setTo(0, 0);
+    this.game.add.tween(this.circle.scale).to( { x: 1, y: 1 }, 150, Phaser.Easing.Linear.None, true, delay * 15);
   },
 
   click: function () {
@@ -428,14 +426,14 @@ BasicGame.Game.prototype = {
       }, this);
 
       cur = this.tagEnd;
+      var index = length;
       while (cur !== null) {
         var prev = cur.prev;
-        cur.reroll();
+        cur.reroll(index--);
         cur = prev;
       }
       this.taggingStarted = false;
       this.tagEnd = null;
-      
 
       this.sumText.text = "?";
       this.pointsText.text = "0 digits, 0 points";
