@@ -259,6 +259,11 @@ BasicGame.Game.prototype = {
     this.addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
     this.addTimeText.anchor.setTo(0.5, 0.5);
 
+    this.resultText = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
+    this.resultText.anchor.setTo(0.5, 0.5);
+    this.resultText2 = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
+    this.resultText2.anchor.setTo(0.5, 0.5);
+
     this.sumText = this.add.text(480, 165, '?', { font: "150px 'Roboto Mono'", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
 
@@ -388,20 +393,51 @@ BasicGame.Game.prototype = {
       // TODO if prime, roll for removal of blocks but no bonus time
       // else, roll for creation of blocks
 
+      var clearMessage = "";
+      var blockerMessage = null;
+      var clearFill = "#080";
       if (this.primeTable[length]) {
-        this.rollBlockRemoval(length);
+        var removed = this.rollBlockRemoval(length);
 
         this.timeLimit += length * 1.0 / 2;
-        //console.log(this.timeLimit);
-
         this.addTimeText.text = "+" + Math.floor(length / 2);
-      } else {
-        this.rollBlockCreation(length);
 
+        clearMessage = length + " - Prime";
+        if (removed > 0) {
+          blockerMessage = removed + " blocker" + (removed == 1 ? "" : "s") + " cleared";
+          clearFill = "#a80";
+        }
+      } else {
+        var added = this.rollBlockCreation(length);
         this.timeLimit += length * 2;
 
         this.addTimeText.text = "+" + length * 2;
+
+        clearMessage = length + " - Composite";
+        if (added > 0) {
+          blockerMessage = added + " blocker" + (added === 1 ? "" : "s") + " added";
+          clearFill = "#a01";
+        }
       }
+      
+      this.resultText.alpha = 1;
+      this.resultText.style.fill = clearFill;
+      this.resultText.text = clearMessage;
+      if (blockerMessage !== null) {
+        this.resultText.y = 185;
+        this.resultText2.y = 230;
+        this.resultText2.alpha = 1;
+        this.resultText2.style.fill = clearFill;
+        this.resultText2.text = blockerMessage;
+
+        this.add.tween(this.resultText).to( { alpha: 0, y: 105 }, 3000, Phaser.Easing.Linear.None, true);
+        this.add.tween(this.resultText2).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
+      } else {
+        this.resultText.y = 230;
+        this.add.tween(this.resultText).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
+        this.resultText2.text = "";
+      }
+
       if (this.timeLimit > this.prevBestTime) {
         Store.set("bestTime", this.timeLimit);
       }
@@ -429,8 +465,9 @@ BasicGame.Game.prototype = {
   rollBlockRemoval: function (length) {
     //console.log(this.blockers);
     if (this.blockers.length === 0) {
-      return;
+      return 0;
     }
+    var removed = 0;
     for (var i = 0; i < length; i++) {
       // per digit, there's a 1 in 5 chance of removing a block
       if (Math.random() * 5 < 1) {
@@ -439,17 +476,20 @@ BasicGame.Game.prototype = {
         this.blockers[delIdx].roll();
         // remove from list
         this.blockers.splice(delIdx, 1);
-        // TODO clearing graphic
 
+        removed++;
+         
         if (this.blockers.length === 0) {
-          return;
+          break;
         }
       }
     }
+    return removed;
   },
 
   rollBlockCreation: function (length) {
     //console.log(this.blockers);
+    var added = 0;
     for (var i = 0; i < length; i++) {
       // per digit, there's a 1 in 5 chance of removing a block
       if (Math.random() * 4 < 1) {
@@ -466,12 +506,14 @@ BasicGame.Game.prototype = {
         cell.circle.play('x');
 
         this.blockers.push(cell);
+        added++;
 
         if (this.blockers.length === 64) {
-          return;
+          break;
         }
       }
     }
+    return added;
   },
 
   timeToText: function (seconds) {
