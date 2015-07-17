@@ -13,6 +13,7 @@ Cell = function (state, game, x, y) {
     this.circle.animations.add('' + (i + 1), [ i ]);
   }
   this.circle.animations.add('x', [ 9, 10, 9, 10, 9], 20);
+  this.circle.animations.add('x-no-anim', [ 9 ]);
 
   this.roll();
   this.circle.inputEnabled = true;
@@ -58,7 +59,22 @@ Cell.prototype = {
     this.prev = null;
     this.tagged = false;
     this.circle.scale.setTo(0, 0);
-    this.game.add.tween(this.circle.scale).to( { x: 1, y: 1 }, 150, Phaser.Easing.Linear.None, true, delay * 15);
+    this.tween = this.game.add.tween(this.circle.scale).to( { x: 1, y: 1 }, 150, Phaser.Easing.Linear.None, true, delay * 15);
+  },
+
+  changeToBlocker: function () {
+    this.value = 0;
+    if (this.tween !== undefined && this.tween.isRunning) {
+      this.circle.play('x-no-anim');
+    } else {
+      this.circle.play('x');
+    }
+  },
+
+  removeBlocker: function () {
+    this.circle.scale.setTo(0, 0);
+    this.roll();
+    this.game.add.tween(this.circle.scale).to( { x: 1, y: 1 }, 150, Phaser.Easing.Linear.None, true);
   },
 
   click: function () {
@@ -538,7 +554,7 @@ BasicGame.Game.prototype = {
       if (Math.random() * 5 < 1) {
         var delIdx = Math.floor(Math.random() * this.blockers.length);
         // reroll selected
-        this.blockers[delIdx].roll();
+        this.blockers[delIdx].removeBlocker();
         // remove from list
         this.blockers.splice(delIdx, 1);
 
@@ -567,8 +583,7 @@ BasicGame.Game.prototype = {
           }
         }
 
-        cell.value = 0;
-        cell.circle.play('x');
+        cell.changeToBlocker();
 
         this.blockers.push(cell);
         added++;
