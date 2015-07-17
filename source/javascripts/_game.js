@@ -250,19 +250,34 @@ BasicGame.Game.prototype = {
     this.scoreText.anchor.setTo(0.5, 0.5);
 
 
-    this.addScoreText = this.add.text(180, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
-    this.addScoreText.anchor.setTo(0.5, 0.5);
-
     this.timeText = this.add.text(780, 160, this.timeLimit, { font: "60px Roboto Mono", fill: "#444"});
     this.timeText.anchor.setTo(0.5, 0.5);
 
-    this.addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
-    this.addTimeText.anchor.setTo(0.5, 0.5);
+    this.addScoreGroup = this.add.group();
+    this.addTimeGroup = this.add.group();
+    this.resultGroup = this.add.group();
+    this.result2Group = this.add.group();
+    for (var i = 0; i < 5; i++) {
+      var addScoreText = this.add.text(180, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
+      addScoreText.anchor.setTo(0.5, 0.5);
+      addScoreText.kill();
+      this.addScoreGroup.add(addScoreText);
 
-    this.resultText = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
-    this.resultText.anchor.setTo(0.5, 0.5);
-    this.resultText2 = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
-    this.resultText2.anchor.setTo(0.5, 0.5);
+      var addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
+      addTimeText.anchor.setTo(0.5, 0.5);
+      addTimeText.kill();
+      this.addTimeGroup.add(addTimeText);
+
+      var resultText = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
+      resultText.anchor.setTo(0.5, 0.5);
+      resultText.kill();
+      this.resultGroup.add(resultText);
+
+      var result2Text = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
+      result2Text.anchor.setTo(0.5, 0.5);
+      result2Text.kill();
+      this.result2Group.add(result2Text);
+    }
 
     this.sumText = this.add.text(480, 165, '?', { font: "150px 'Roboto Mono'", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
@@ -373,10 +388,16 @@ BasicGame.Game.prototype = {
         Store.set("highScore", this.score);
       }
 
-      this.addScoreText.text = "+" + this.calculatePoints(sum);
-      this.addScoreText.alpha = 1;
-      this.addScoreText.y = 100;
-      this.add.tween(this.addScoreText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
+      var addScoreText = this.addScoreGroup.getFirstExists(false);
+      if (addScoreText !== null) {
+        addScoreText.reset(180, 100);
+        addScoreText.text = "+" + this.calculatePoints(sum);
+        addScoreText.alpha = 1;
+        var tween = this.add.tween(addScoreText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
+        tween.onComplete.add(function(text) {
+          text.kill();
+        }, this);
+      }
 
       // clear all ripple animations and reroll cells
       this.ripples.forEachAlive(function(ripple) {
@@ -402,11 +423,12 @@ BasicGame.Game.prototype = {
       var clearMessage = "";
       var blockerMessage = null;
       var clearFill = "#080";
+      var addTime = "";
       if (this.primeTable[length]) {
         var removed = this.rollBlockRemoval(length);
 
         this.timeLimit += length * 1.0 / 2;
-        this.addTimeText.text = "+" + Math.floor(length / 2);
+        addTime = "+" + Math.floor(length / 2);
 
         clearMessage = length + " - Prime";
         if (removed > 0) {
@@ -417,7 +439,7 @@ BasicGame.Game.prototype = {
         var added = this.rollBlockCreation(length);
         this.timeLimit += length * 2;
 
-        this.addTimeText.text = "+" + length * 2;
+        addTime = "+" + length * 2;
 
         clearMessage = length + " - Composite";
         if (added > 0) {
@@ -426,31 +448,47 @@ BasicGame.Game.prototype = {
         }
       }
       
-      this.resultText.alpha = 1;
-      this.resultText.style.fill = clearFill;
-      this.resultText.text = clearMessage;
-      if (blockerMessage !== null) {
-        this.resultText.y = 185;
-        this.resultText2.y = 230;
-        this.resultText2.alpha = 1;
-        this.resultText2.style.fill = clearFill;
-        this.resultText2.text = blockerMessage;
+      var resultText = this.resultGroup.getFirstExists(false);
+      var result2Text = this.result2Group.getFirstExists(false);
 
-        this.add.tween(this.resultText).to( { alpha: 0, y: 105 }, 3000, Phaser.Easing.Linear.None, true);
-        this.add.tween(this.resultText2).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
-      } else {
-        this.resultText.y = 230;
-        this.add.tween(this.resultText).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
-        this.resultText2.text = "";
+      if (resultText !== null && result2Text !== null) {
+        resultText.reset(480, 250);
+        resultText.alpha = 1;
+        resultText.style.fill = clearFill;
+        resultText.text = clearMessage;
+        if (blockerMessage !== null) {
+          resultText.y = 185;
+          result2Text.reset(480, 230);
+          result2Text.alpha = 1;
+          result2Text.style.fill = clearFill;
+          result2Text.text = blockerMessage;
+
+          var rTween = this.add.tween(resultText).to( { alpha: 0, y: 105 }, 3000, Phaser.Easing.Linear.None, true);
+          rTween.onComplete.add(function (text) { text.kill(); }, this);
+
+          var rTween2 = this.add.tween(result2Text).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
+          rTween2.onComplete.add(function (text) { text.kill(); }, this);
+        } else {
+          resultText.y = 230;
+          var rTween3 = this.add.tween(resultText).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
+          rTween3.onComplete.add(function (text) { text.kill(); }, this);
+        }
       }
 
       if (this.timeLimit > this.prevBestTime) {
         Store.set("bestTime", this.timeLimit);
       }
 
-      this.addTimeText.alpha = 1;
-      this.addTimeText.y = 100;
-      this.add.tween(this.addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
+      var addTimeText = this.addTimeGroup.getFirstExists(false);
+      if (addTimeText !== null) {
+        addTimeText.reset(780, 100);
+        addTimeText.text = addTime;
+        addTimeText.alpha = 1;
+        var tween2 = this.add.tween(addTimeText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
+        tween2.onComplete.add(function(text) {
+          text.kill();
+        }, this);
+      }
     } else {
       if (sum === 0) {
         this.sumText.text = "?";
