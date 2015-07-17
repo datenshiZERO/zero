@@ -318,7 +318,7 @@ BasicGame.Game.prototype = {
       } else {
         var over = this.cellAt(pointer.x, pointer.y);
         if (this.lastClicked !== over) {
-          if (over !== null) {
+          if (over !== null && over !== undefined) {
             over.click();
           }
           this.lastClicked = over;
