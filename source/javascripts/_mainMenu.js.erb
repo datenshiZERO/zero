@@ -15,9 +15,10 @@ BasicGame.MainMenu.prototype = {
     //  Here all we're doing is playing some music and adding a picture and button
     //  Naturally I expect you to do something significantly better :)
 
-    this.add.text(this.game.width / 2, 300, "zero", { font: "150px Roboto Mono", fill: "#222", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 280, "zero", { font: "150px Roboto Mono", fill: "#222", align: "center"}).anchor.setTo(0.5, 0.5);
 
-    this.add.text(this.game.width / 2, 600, "connect digits so the sum ends in zero", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 560, "connect digits so the sum ends in zero", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, 600, "the higher the sum, the greater the points", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
     this.add.text(this.game.width / 2, 640, "tap/click/drag to select or unselect digits", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
     this.add.text(this.game.width / 2, 740, "each digit gives two extra seconds but", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
     this.add.text(this.game.width / 2, 780, "has a chance to create blockers", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);

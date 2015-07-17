@@ -499,14 +499,14 @@ BasicGame.Game.prototype = {
           result2Text.style.fill = clearFill;
           result2Text.text = blockerMessage;
 
-          var rTween = this.add.tween(resultText).to( { alpha: 0, y: 105 }, 3000, Phaser.Easing.Linear.None, true);
+          var rTween = this.add.tween(resultText).to( { alpha: 0, y: -25 }, 3000, Phaser.Easing.Linear.None, true);
           rTween.onComplete.add(function (text) { text.kill(); }, this);
 
-          var rTween2 = this.add.tween(result2Text).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
+          var rTween2 = this.add.tween(result2Text).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
           rTween2.onComplete.add(function (text) { text.kill(); }, this);
         } else {
           resultText.y = 230;
-          var rTween3 = this.add.tween(resultText).to( { alpha: 0, y: 150 }, 3000, Phaser.Easing.Linear.None, true);
+          var rTween3 = this.add.tween(resultText).to( { alpha: 0, y: 20 }, 3000, Phaser.Easing.Linear.None, true);
           rTween3.onComplete.add(function (text) { text.kill(); }, this);
         }
       }
