@@ -639,7 +639,7 @@ BasicGame.Game.prototype = {
       this.timeText.text = "0";
     }
 
-    this.overlay = this.add.sprite(0, 0, "overlay");
+    this.overlay = this.add.sprite(100, 300, "overlay");
 
     this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
     
@@ -718,6 +718,77 @@ BasicGame.Game.prototype = {
       this.overlay.inputEnabled = true;
       this.overlay.events.onInputDown.add(this.quitGame, this);
     }, this);
+
+    this.addSocialBar();
+  },
+
+  addSocialBar: function() {
+    this.overlay = this.add.sprite(100, 1080, "social");
+    this.add.text(480, 1100, "share this on", { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+
+    var fullUrl, ogUrl, text, url, icon;
+
+    url = encodeURIComponent("http://zero.karaniwan.org/");
+    ogUrl = encodeURIComponent("http://zero.karaniwan.org/<%= image_path "screenshot.png" %>");
+
+    text = encodeURIComponent("I got " + this.score + " points in \"zero\", a mathematical puzzle game. Try beating my score!");
+
+    fullUrl = "https://www.facebook.com/dialog/share?app_id=944062788970440&href=" + url + "&display=page&redirect_uri=https://facebook.com";
+    icon = this.add.sprite(200, 1170, "social-buttons");
+    icon.anchor.setTo(0.5, 0.5);
+    icon.animations.add('s', [ 0 ]);
+    icon.play('s');
+    icon.inputEnabled = true;
+    icon.events.onInputDown.add(function() {
+      var win = window.open(this, '_blank');
+      win.focus();  
+    }, fullUrl);
+
+
+    fullUrl = "https://twitter.com/intent/tweet?url=" + url + "&text=" + text;
+    icon = this.add.sprite(340, 1170, "social-buttons");
+    icon.anchor.setTo(0.5, 0.5);
+    icon.animations.add('s', [ 1 ]);
+    icon.play('s');
+    icon.inputEnabled = true;
+    icon.events.onInputDown.add(function() {
+      var win = window.open(this, '_blank');
+      win.focus();  
+    }, fullUrl);
+
+    fullUrl = "http://www.tumblr.com/share/link?url=" + url + "&name=Zero&description=" + text;
+    icon = this.add.sprite(480, 1170, "social-buttons");
+    icon.anchor.setTo(0.5, 0.5);
+    icon.animations.add('s', [ 2 ]);
+    icon.play('s');
+    icon.inputEnabled = true;
+    icon.events.onInputDown.add(function() {
+      var win = window.open(this, '_blank');
+      win.focus();  
+    }, fullUrl);
+
+    fullUrl = "http://www.pinterest.com/pin/create/button/?url=" + url + "&media=" + ogUrl + "&description=" + text;
+    icon = this.add.sprite(620, 1170, "social-buttons");
+    icon.anchor.setTo(0.5, 0.5);
+    icon.animations.add('s', [ 3 ]);
+    icon.play('s');
+    icon.inputEnabled = true;
+    icon.events.onInputDown.add(function() {
+      var win = window.open(this, '_blank');
+      win.focus();  
+    }, fullUrl);
+
+    fullUrl = "https://plus.google.com/share?url=" + url;
+    icon = this.add.sprite(760, 1170, "social-buttons");
+    icon.anchor.setTo(0.5, 0.5);
+    icon.animations.add('s', [ 4 ]);
+    icon.play('s');
+    icon.inputEnabled = true;
+    icon.events.onInputDown.add(function() {
+      var win = window.open(this, '_blank');
+      win.focus();  
+    }, fullUrl);
+
   },
 
   quitGame: function (pointer) {
