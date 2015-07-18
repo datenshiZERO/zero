@@ -683,7 +683,6 @@ BasicGame.Game.prototype = {
 
   modifyTimer: function(length) {
     var oldTime = this.time.events.duration;
-    console.log(oldTime + " " + length);
     this.time.events.removeAll();
 
     this.countDown = this.time.events.add(oldTime + length, function () { 
