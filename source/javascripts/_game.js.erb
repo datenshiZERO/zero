@@ -12,8 +12,7 @@ Cell = function (state, game, x, y) {
   for (var i = 0; i < 9; i++) {
     this.circle.animations.add('' + (i + 1), [ i ]);
   }
-  this.circle.animations.add('x', [ 9, 10, 9, 10, 9], 20);
-  this.circle.animations.add('x-no-anim', [ 9 ]);
+  this.circle.animations.add('x', [ 9 ]);
 
   this.roll();
   this.circle.inputEnabled = true;
@@ -63,10 +62,11 @@ Cell.prototype = {
 
   changeToBlocker: function () {
     this.value = 0;
-    if (this.tween !== undefined && this.tween.isRunning) {
-      this.circle.play('x-no-anim');
-    } else {
+    this.circle.play('x');
+    if (this.tween === undefined || !this.tween.isRunning) {
       this.circle.play('x');
+      this.circle.scale.setTo(0, 0);
+      this.tween = this.game.add.tween(this.circle.scale).to( { x: 1, y: 1 }, 150, Phaser.Easing.Linear.None, true);
     }
   },
 
