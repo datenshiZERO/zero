@@ -309,6 +309,16 @@ BasicGame.Game.prototype = {
     this.pointsText = this.add.text(480, 270, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
     this.pointsText.anchor.setTo(0.5, 0.5);
 
+    this.clearButton = this.add.sprite(60, 270, "action-buttons");
+    this.clearButton.anchor.setTo(0.5, 0.5);
+    this.clearButton.frame = 1;
+    this.clearButton.inputEnabled = true;
+    this.clearButton.events.onInputDown.add(this.clearSelection, this);
+
+    this.optionsButton = this.add.sprite(900, 270, "action-buttons");
+    this.optionsButton.anchor.setTo(0.5, 0.5);
+    this.optionsButton.frame = 2;
+
     this.time.reset();
 
     this.primeTable = [ false,
@@ -323,6 +333,23 @@ BasicGame.Game.prototype = {
     this.colorTable = [ "#444", "#41dbdb", "#b40561", "#9cff2e", "#710a92",
       "#f8ed2d", "#501095", "#febd2e", "#2b1e98", "#fe642c" ];
     this.blockers = [];
+  },
+
+  clearSelection: function() {
+    if (!this.taggingStarted) {
+      return;
+    }
+
+    var cur = this.tagEnd;
+    while (cur !== null) {
+      var prev = cur.prev;
+      cur.connector.frame = 0;
+      cur.prev = null;
+      cur.tagged = false;
+      cur = prev;
+    }
+    this.taggingStarted = false;
+    this.tagEnd = null;
   },
 
   update: function () {
@@ -344,6 +371,8 @@ BasicGame.Game.prototype = {
       this.endGame(timeLeft);
     }
     this.handleDragging();
+
+    this.clearButton.frame = (this.taggingStarted ? 0 : 1);
   },
 
   handleDragging: function () {
