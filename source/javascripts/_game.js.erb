@@ -235,6 +235,10 @@ BasicGame.Game.prototype = {
     this.score = 0;
     this.timeLimit = 90.0;
 
+    this.countDown = this.time.events.add(this.timeLimit * 1000, function () { 
+      this.endGame(0);
+    }, this);
+
     this.prevHighScore = Store.get("highScore");
     if (this.prevHighScore === null) {
       this.prevHighScore = 0;
@@ -316,8 +320,8 @@ BasicGame.Game.prototype = {
     this.optionsButton = this.add.sprite(900, 270, "action-buttons");
     this.optionsButton.anchor.setTo(0.5, 0.5);
     this.optionsButton.frame = 2;
-
-    this.time.reset();
+    this.optionsButton.inputEnabled = true;
+    this.optionsButton.events.onInputDown.add(this.pauseGame, this);
 
     this.primeTable = [ false,
       false, true, true, false, true, false, true, false, false, false,
@@ -350,8 +354,61 @@ BasicGame.Game.prototype = {
     this.tagEnd = null;
   },
 
+  pauseGame: function () {
+    this.pauseStuff = [];
+    this.optionsButton.frame = 3;
+    var pauseOverlay = this.add.sprite(0, 300, "overlay");
+    pauseOverlay.scale.setTo(1.4, 1.3);
+    this.pauseStuff.push(pauseOverlay);
+
+
+    var pauseLine = this.add.text(480, 420, "Game Paused", { font: "72px Roboto Mono", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    pauseLine = this.add.text(480, 590, "Time Elapsed", { font: "50px Roboto Mono", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    pauseLine = this.add.text(480, 650, this.timeToText(this.timeLimit - this.time.events.duration / 1000), { font: "42px Roboto Mono", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    pauseLine = this.add.text(480, 740, "Previous Bests", { font: "48px Roboto Mono", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+    pauseLine = this.add.text(480, 800, "High Score - " + this.prevHighScore, { font: "36px Roboto Mono", fill: "#222"})
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+    pauseLine = this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "36px Roboto Mono", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    if (this.prevMillionTime !== null) {
+      pauseLine = this.add.text(480, 900, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "36px Roboto Mono", fill: "#222"})
+      pauseLine.anchor.setTo(0.5, 0.5);
+      this.pauseStuff.push(pauseLine);
+    }
+
+    pauseLine = this.add.text(480, 1100, "Tap/click to resume", { font: "50px Roboto Mono", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    this.game.paused = true;
+    this.game.input.onDown.add(unpause, this);
+    function unpause(event) {
+      if (this.game.paused) {
+        for (var i = 0; i < this.pauseStuff.length; i++) {
+          this.pauseStuff[i].destroy();
+        }
+        this.optionsButton.frame = 2;
+        this.game.paused = false;
+      }
+    }
+  },
+
   update: function () {
-    var timeLeft = this.timeLimit - this.time.totalElapsedSeconds();
+    var timeLeft = this.time.events.duration / 1000;
     if (timeLeft > 0 && this.blockers.length < 64) { 
       var text = Math.floor(timeLeft);
       if (text !== this.timeText.text) {
@@ -491,6 +548,7 @@ BasicGame.Game.prototype = {
         var removed = this.rollBlockRemoval(length);
 
         this.timeLimit += length * 1.0 / 2;
+        this.modifyTimer(length * 500);
         addTime = "+" + Math.floor(length / 2);
 
         clearMessage = length + " - Prime";
@@ -500,8 +558,9 @@ BasicGame.Game.prototype = {
         }
       } else {
         var added = this.rollBlockCreation(length);
-        this.timeLimit += length * 2;
 
+        this.timeLimit += length * 2;
+        this.modifyTimer(length * 2000);
         addTime = "+" + length * 2;
 
         clearMessage = length + " - Composite";
@@ -620,6 +679,16 @@ BasicGame.Game.prototype = {
       }
     }
     return added;
+  },
+
+  modifyTimer: function(length) {
+    var oldTime = this.time.events.duration;
+    console.log(oldTime + " " + length);
+    this.time.events.removeAll();
+
+    this.countDown = this.time.events.add(oldTime + length, function () { 
+      this.endGame(0);
+    }, this);
   },
 
   timeToText: function (seconds) {
