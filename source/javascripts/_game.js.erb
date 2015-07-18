@@ -9,10 +9,6 @@ Cell = function (state, game, x, y) {
 
   this.circle = game.add.sprite(60 + (x * 120), 378 + (y * 120), 'circles');
   this.circle.anchor.setTo(0.5, 0.5);
-  for (var i = 0; i < 9; i++) {
-    this.circle.animations.add('' + (i + 1), [ i ]);
-  }
-  this.circle.animations.add('x', [ 9 ]);
 
   this.roll();
   this.circle.inputEnabled = true;
@@ -21,38 +17,40 @@ Cell = function (state, game, x, y) {
   this.connector = game.add.sprite(x * 120, 320 + (y * 120), 'connectors');
   this.connector.scale.setTo(2, 2);
 
-  this.connector.animations.add('none', [ 0 ]);
-  this.connector.animations.add('dot', [ 1 ]);
-  this.connector.animations.add('up', [ 2 ]);
-  this.connector.animations.add('right', [ 3 ]);
-  this.connector.animations.add('down', [ 4 ]);
-  this.connector.animations.add('left', [ 5 ]);
-  this.connector.animations.add('up-right', [ 6 ]);
-  this.connector.animations.add('right-down', [ 7 ]);
-  this.connector.animations.add('down-left', [ 8 ]);
-  this.connector.animations.add('left-up', [ 9 ]);
-  this.connector.animations.add('up-down', [ 10 ]);
-  this.connector.animations.add('right-left', [ 11 ]);
-  this.connector.animations.add('right-up', [ 6 ]);
-  this.connector.animations.add('down-right', [ 7 ]);
-  this.connector.animations.add('left-down', [ 8 ]);
-  this.connector.animations.add('up-left', [ 9 ]);
-  this.connector.animations.add('down-up', [ 10 ]);
-  this.connector.animations.add('left-right', [ 11 ]);
-
   this.tagged = false;
   this.prev = null;
 
 };
 
 Cell.prototype = {
+  changeConnectorTo: function(direction) {
+    if (direction === 'none') { this.connector.frame = 0 };
+    if (direction === 'dot') { this.connector.frame = 1 };
+    if (direction === 'up') { this.connector.frame = 2 };
+    if (direction === 'right') { this.connector.frame = 3 };
+    if (direction === 'down') { this.connector.frame = 4 };
+    if (direction === 'left') { this.connector.frame = 5 };
+    if (direction === 'up-right') { this.connector.frame = 6 };
+    if (direction === 'right-down') { this.connector.frame = 7 };
+    if (direction === 'down-left') { this.connector.frame = 8 };
+    if (direction === 'left-up') { this.connector.frame = 9 };
+    if (direction === 'up-down') { this.connector.frame = 10 };
+    if (direction === 'right-left') { this.connector.frame = 11 };
+    if (direction === 'right-up') { this.connector.frame = 6 };
+    if (direction === 'down-right') { this.connector.frame = 7 };
+    if (direction === 'left-down') { this.connector.frame = 8 };
+    if (direction === 'up-left') { this.connector.frame = 9 };
+    if (direction === 'down-up') { this.connector.frame = 10 };
+    if (direction === 'left-right') { this.connector.frame = 11 };
+  },
+
   roll: function() {
     this.value = (Math.floor(Math.random() * 9) + 1);
-    this.circle.play('' + this.value);
+    this.circle.frame = this.value - 1;
   },
 
   reroll: function(delay) {
-    this.connector.play('none');
+    this.connector.frame = 0;
     this.roll();
     this.prev = null;
     this.tagged = false;
@@ -62,9 +60,9 @@ Cell.prototype = {
 
   changeToBlocker: function () {
     this.value = 0;
-    this.circle.play('x');
+    this.circle.frame = 9;
     if (this.tween === undefined || !this.tween.isRunning) {
-      this.circle.play('x');
+      this.circle.frame = 9;
       this.circle.scale.setTo(0, 0);
       this.tween = this.game.add.tween(this.circle.scale).to( { x: 1, y: 1 }, 150, Phaser.Easing.Linear.None, true);
     }
@@ -129,7 +127,7 @@ Cell.prototype = {
   },
 
   clearConnector: function() {
-    this.connector.play('none');
+    this.connector.frame = 0;
   },
 
   displayConnectorMid: function(next) {
@@ -147,31 +145,31 @@ Cell.prototype = {
       direction = 'down';
     }
     if (this.prev === null) {
-      this.connector.play(direction);
+      this.changeConnectorTo(direction);
     } else {
       if (this.rightOf(this.prev)) {
-        this.connector.play(direction + '-left');
+        this.changeConnectorTo(direction + '-left');
       } else if (this.leftOf(this.prev)) {
-        this.connector.play(direction + '-right');
+        this.changeConnectorTo(direction + '-right');
       } else if (this.bottomOf(this.prev)) {
-        this.connector.play(direction + '-up');
+        this.changeConnectorTo(direction + '-up');
       } else if (this.topOf(this.prev)) {
-        this.connector.play(direction + '-down');
+        this.changeConnectorTo(direction + '-down');
       }
     }
   },
 
   displayConnectorEnd: function() {
     if (this.prev === null) {
-      this.connector.play('dot');
+      this.connector.frame = 1;
     } else if (this.rightOf(this.prev)) {
-      this.connector.play('left');
+      this.changeConnectorTo('left');
     } else if (this.leftOf(this.prev)) {
-      this.connector.play('right');
+      this.changeConnectorTo('right');
     } else if (this.bottomOf(this.prev)) {
-      this.connector.play('up');
+      this.changeConnectorTo('up');
     } else if (this.topOf(this.prev)) {
-      this.connector.play('down');
+      this.changeConnectorTo('down');
     }
   },
 
@@ -765,8 +763,7 @@ BasicGame.Game.prototype = {
     fullUrl = "https://www.facebook.com/dialog/share?app_id=944062788970440&href=" + url + "&display=page&redirect_uri=https://facebook.com";
     icon = this.add.sprite(200, 1170, "social-buttons");
     icon.anchor.setTo(0.5, 0.5);
-    icon.animations.add('s', [ 0 ]);
-    icon.play('s');
+    icon.frame = 0;
     icon.inputEnabled = true;
     icon.events.onInputDown.add(function() {
       var win = window.open(this, '_blank');
@@ -777,8 +774,7 @@ BasicGame.Game.prototype = {
     fullUrl = "https://twitter.com/intent/tweet?url=" + url + "&text=" + text;
     icon = this.add.sprite(340, 1170, "social-buttons");
     icon.anchor.setTo(0.5, 0.5);
-    icon.animations.add('s', [ 1 ]);
-    icon.play('s');
+    icon.frame = 1;
     icon.inputEnabled = true;
     icon.events.onInputDown.add(function() {
       var win = window.open(this, '_blank');
@@ -788,8 +784,7 @@ BasicGame.Game.prototype = {
     fullUrl = "http://www.tumblr.com/share/link?url=" + url + "&name=Zero&description=" + text;
     icon = this.add.sprite(480, 1170, "social-buttons");
     icon.anchor.setTo(0.5, 0.5);
-    icon.animations.add('s', [ 2 ]);
-    icon.play('s');
+    icon.frame = 2;
     icon.inputEnabled = true;
     icon.events.onInputDown.add(function() {
       var win = window.open(this, '_blank');
@@ -799,8 +794,7 @@ BasicGame.Game.prototype = {
     fullUrl = "http://www.pinterest.com/pin/create/button/?url=" + url + "&media=" + ogUrl + "&description=" + text;
     icon = this.add.sprite(620, 1170, "social-buttons");
     icon.anchor.setTo(0.5, 0.5);
-    icon.animations.add('s', [ 3 ]);
-    icon.play('s');
+    icon.frame = 3;
     icon.inputEnabled = true;
     icon.events.onInputDown.add(function() {
       var win = window.open(this, '_blank');
@@ -810,8 +804,7 @@ BasicGame.Game.prototype = {
     fullUrl = "https://plus.google.com/share?url=" + url;
     icon = this.add.sprite(760, 1170, "social-buttons");
     icon.anchor.setTo(0.5, 0.5);
-    icon.animations.add('s', [ 4 ]);
-    icon.play('s');
+    icon.frame = 4;
     icon.inputEnabled = true;
     icon.events.onInputDown.add(function() {
       var win = window.open(this, '_blank');
