@@ -46,7 +46,7 @@ Cell.prototype = {
   },
 
   roll: function() {
-    this.value = this.rnd.between(1, 9);
+    this.value = this.rnd.between(1, this.game.mod - 1);
     this.circle.frame = this.value - 1;
   },
 
@@ -587,7 +587,7 @@ BasicGame.Game.prototype = {
       length++;
       cur = cur.prev;
     }
-    if (length > 1 && sum % 10 === 0) {
+    if (length > 1 && sum % this.game.mod === 0) {
 
       this.score += this.calculatePoints(sum);
       
@@ -729,7 +729,7 @@ BasicGame.Game.prototype = {
         this.sumText.text = "?";
         this.pointsText.text = "0 digits, 0 points";
       } else {
-        this.sumText.text = sum % 10;
+        this.sumText.text = sum % this.game.mod;
         this.pointsText.text = length + " digit" + (length == 1 ? "" : "s") + 
           (this.primeTable[length + 1] ? " (prime next)" : "") + ", " + 
           this.calculatePoints(sum) + " point" + (this.calculatePoints(sum) == 1 ? "" : "s");

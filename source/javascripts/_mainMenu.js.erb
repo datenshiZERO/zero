@@ -10,47 +10,75 @@ BasicGame.MainMenu.prototype = {
 
   create: function () {
     this.stage.backgroundColor = '#ddd';
+    this.pageTexts = [];
+    this.changePage("main");
+  },
 
-    //  We've already preloaded our assets, so let's kick right into the Main Menu itself.
-    //  Here all we're doing is playing some music and adding a picture and button
-    //  Naturally I expect you to do something significantly better :)
+  changePage: function (page) {
+    this.page = page;
+    while (this.pageTexts.length > 0) {
+      var text = this.pageTexts.pop();
+      text.destroy();
+    }
+    if (this.page === "main") {
+      this.addCenteredText(280, 150, "zero");
+      var startGame = this.addCenteredText(800, 60, "START GAME");
+      startGame.inputEnabled = true;
+      startGame.events.onInputDown.add(function () { this.startGame() }, this);
+      var howToPlay = this.addCenteredText(900, 60, "HOW TO PLAY");
+      howToPlay.inputEnabled = true;
+      howToPlay.events.onInputDown.add(function () { this.changePage("rules") }, this);
+      this.addCenteredText(1000, 28, "CHALLENGES");
+      var mod7 = this.addCenteredText(1050, 60, "MOD7");
+      mod7.inputEnabled = true;
+      mod7.events.onInputDown.add(function () { 
+        this.game.mod = 7;
+        this.startGame() 
+      }, this);
+      this.addCenteredText(this.game.height - 75, 20, "v1.2.2");
+      this.addCenteredText(this.game.height - 50, 20, "Copyright (c) 2015 Bryan Bibat");
+    }
+    if (this.page === "rules") {
+      this.addCenteredText(360, 30, "connect digits so the sum ends in zero");
+      this.addCenteredText(400, 30, "the higher the sum, the greater the points");
+      this.addCenteredText(440, 30, "tap/click/drag to select or unselect digits");
+      this.addCenteredText(540, 30, "each digit gives two extra seconds but");
+      this.addCenteredText(580, 30, "has a chance to create blockers");
 
-    this.add.text(this.game.width / 2, 280, "zero", { font: "150px Roboto Mono", fill: "#222", align: "center"}).anchor.setTo(0.5, 0.5);
+      this.addCenteredText(620, 30, "digits from prime length chains can clear");
+      this.addCenteredText(660, 30, "blockers but only give a half second each");
 
-    this.add.text(this.game.width / 2, 560, "connect digits so the sum ends in zero", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 600, "the higher the sum, the greater the points", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 640, "tap/click/drag to select or unselect digits", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 740, "each digit gives two extra seconds but", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 780, "has a chance to create blockers", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
+      this.addCenteredText(760, 30, "aim for one million points");
+      var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
+      back.inputEnabled = true;
+      back.events.onInputDown.add(function () { this.changePage("main") }, this);
+    }
+  },
 
-    this.add.text(this.game.width / 2, 820, "digits from prime length chains can clear", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, 860, "blockers but only give a half second each", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-
-    this.add.text(this.game.width / 2, 960, "aim for one million points", { font: "30px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-
-    //this.add.text(this.game.width / 2, 1000, "(hint: spamming alone is inefficient)", { font: "24px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-
-    this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 455, "tap/click to start", { font: "60px Roboto Mono", fill: "#222" });
-    this.loadingText.anchor.setTo(0.5, 0.5);
-    this.add.text(this.game.width / 2, this.game.height - 50, "Copyright (c) 2015 Bryan Bibat", { font: "20px Roboto Mono", fill: "#444", align: "center"}).anchor.setTo(0.5, 0.5);
-
+  addCenteredText: function (y, size, text) {
+    var text = this.add.text(
+      this.game.width / 2, y, text, 
+      { font: size + "px Roboto Mono", fill: "#444", align: "center" }
+    );
+    text.anchor.setTo(0.5, 0.5);
+    this.pageTexts.push(text);
+    return text;
   },
 
   update: function () {
-
-    if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) || this.input.activePointer.isDown) {
-      this.startGame();
+    if (this.page === "main") {
+      if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+        this.startGame();
+      }
     }
-    //  Do some nice funky main menu effect here
 
   },
 
   startGame: function (pointer) {
 
-    //  Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
-    // this.music.stop();
-
-    //  And start the actual game
+    if (this.game.mod === undefined || this.game.mod === null) {
+      this.game.mod = 10;
+    }
     this.state.start('Game');
 
   }
