@@ -4,8 +4,18 @@ body {
   background: #fff;
   width: 768px;
   margin: 0 auto;
-  font-family: Helvetica Neue, Tahoma, Verdana, Arial, sans-serif;
+  font-family: Helvetica Neue, Arial, sans-serif;
   color: #333;
+}
+
+@media (max-width: 767px) {
+  body {
+    width: 100%;
+  }
+  h1, h2, h3, p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 @import url(http://fonts.googleapis.com/css?family=Roboto+Mono:300,700);
