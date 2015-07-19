@@ -38,7 +38,7 @@ BasicGame.MainMenu.prototype = {
 
   update: function () {
 
-    if (this.input.keyboard.isDown(Phaser.Keyboard.Z) || this.input.activePointer.isDown) {
+    if (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) || this.input.activePointer.isDown) {
       this.startGame();
     }
     //  Do some nice funky main menu effect here

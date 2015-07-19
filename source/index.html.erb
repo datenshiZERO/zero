@@ -29,14 +29,24 @@
 
   <h1>zero - a mathematical puzzle game</h1>
 
-  <p><a href="/full">For mobile users and those who want to figure things out by themselves, please go here for the game-only version.</a></p>
+  <p>If you're:</p>
+  <ul>
+    <li>playing on mobile</li>
+    <li>one of those who want to figure out puzzle games by themselves</li>
+    <li>want to use keyboard controls mentioned at the bottom of the page</li>
+  </ul>
+
+  <p><a href="/full">Please use this game-only version for best playing experience.</a></p>
+
+  <hr>
+
   <div id="game-container"></div>
 
   <h2>Longer Explanation of the Rules</h2>
 
   <p><em>By popular demand, here's the mechanics explained.</em></p>
 
-  <p>Click/tap numbers to connect them to a chain. You can only connect numbers that are at the left, right, top, bottom of the last selected number. As a faster alternative, you can also drag/swipe through the numbers.</p>
+  <p>Click/tap numbers to connect them to a chain. You can only connect numbers that are at the left, right, top, bottom of the last selected number. As a faster alternative, you can also drag/swipe through the numbers. Clicking the <strong>X</strong> button at the upper left clears the current chain.</p>
 
   <p>When the sum of the chain ends in zero (e.g. 40, 130) you get rewards and side effects depending on whether the chain's length is composite or prime.<p>
 
@@ -73,7 +83,14 @@
   <ul>
     <li><strike><strong>Clear Selection button</strong> - to save time in backtracking a long dead-end chain</strike> - <em>done!</em></li>
     <li><strike><strong>Pause button</strong> - the current timer is real time so you can't leave the game board like in other puzzle games</strike> - <em>done!</em></li>
-    <li><strong>Keyboard controls</strong> - for people who have sworn off the mouse. (vim-ers? xmonad-ers? LOL)</li>
+    <li><strike><strong>Keyboard controls</strong> - for people who have sworn off the mouse. (vim-ers? xmonad-ers? LOL)</strike> - <em>done!</em> The game can now be started by the Spacebar and the game can be played with various controls:
+      <ul>
+        <li>Usual - Arrow keys for movement, Spacebar or Enter for selection, <code>R</code> to clear the chain, <code>P</code> to pause, and any key to unpause.</li>
+        <li>Gaming - <code>WASD</code> for movement</li>
+        <li>vi - <code>HJKL</code> for movement, <code>I</code> or <code>V</code> to start the chain, and Escape to clear the chain.</li>
+      </ul>
+    </li>
+    <li><strong>Difficulty levels</strong> - Some find the game too hard, others too easy. Will make an easy mode with no time limit and a hard mode with higher blocker spawn rate, lower composite reward, and maybe new mechanics that ruins common strategies.</li>
   </ul>
 
   <h2>Credits</h2>
@@ -81,6 +98,7 @@
   <p><code>zero</code> &copy; 2015 <a href="http://bryanbibat.net">Bryan Bibat</a></p>
 
   <p>The game uses <a href="http://phaser.io">Phaser</a> v2.4.0-rc2.</p>
+
   <p>Icons from Open Iconic — <a href="www.useiconic.com/open">www.useiconic.com/open</a></p>
 
   <p>Initial playtesting and player input by the #gaming Slack channel of the <a href="https://www.facebook.com/groups/phackers/">Phillippine Tech Hackers</a> community. Additional input from /r/WebGames and Hacker News.</p>

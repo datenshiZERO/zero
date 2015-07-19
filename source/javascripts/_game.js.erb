@@ -100,10 +100,14 @@ Cell.prototype = {
           clicked.prev = null;
           clicked.clearConnector();
         }
+        if (this.state.tagEnd !== null) {
+          this.state.keyboardPosition.setTo(this.state.tagEnd.x, this.state.tagEnd.y);
+        }
       } else if (this.tagged === true) {
         return;
       } else if (this.adjacentTo(this.state.tagEnd)) {
         this.displayRipple();
+        this.state.keyboardPosition.setTo(this.x, this.y);
         this.prev = this.state.tagEnd;
         this.prev.displayConnectorMid(this);
         this.state.tagEnd = this;
@@ -335,6 +339,110 @@ BasicGame.Game.prototype = {
     this.colorTable = [ "#444", "#41dbdb", "#b40561", "#9cff2e", "#710a92",
       "#f8ed2d", "#501095", "#febd2e", "#2b1e98", "#fe642c" ];
     this.blockers = [];
+
+    this.keyboardEnabled = false;
+    this.keyboardPosition = new Phaser.Point(0, 0);
+    this.input.keyboard.addCallbacks(this, function () {
+      this.handleKeyboard(this.input.keyboard.lastKey);
+    });
+  },
+
+  handleKeyboard: function (key) {
+    this.enableKeyboard();
+    if (this.game.paused) {
+      this.unpause();
+      return;
+    }
+
+    if (key.keyCode === Phaser.Keyboard.SPACEBAR ||
+        key.keyCode === Phaser.Keyboard.ENTER) {
+      this.grid[this.keyboardPosition.x][this.keyboardPosition.y].click();
+    }
+    if (key.keyCode === Phaser.Keyboard.R || 
+        key.keyCode === Phaser.Keyboard.ESC) {
+      this.clearSelection();
+    }
+    if (key.keyCode === Phaser.Keyboard.P || 
+        key.keyCode === Phaser.Keyboard.Q) {
+      this.pauseGame();
+    }
+    if (this.taggingStarted) {
+      var old = new Phaser.Pointer(this.keyboardPosition.x, this.keyboardPosition.y);
+      if (this.tagEnd !== null && this.tagEnd.x < 7 &&
+          (key.keyCode === Phaser.Keyboard.RIGHT ||
+          key.keyCode === Phaser.Keyboard.D ||
+          key.keyCode === Phaser.Keyboard.L) ) {
+        this.grid[this.keyboardPosition.x + 1][this.keyboardPosition.y].click();
+      }
+      if (this.tagEnd !== null && this.tagEnd.x > 0 &&
+          (key.keyCode === Phaser.Keyboard.LEFT ||
+          key.keyCode === Phaser.Keyboard.A ||
+          key.keyCode === Phaser.Keyboard.H) ) {
+        this.grid[this.keyboardPosition.x - 1][this.keyboardPosition.y].click();
+      }
+      if (this.tagEnd !== null && this.tagEnd.y < 7 &&
+          (key.keyCode === Phaser.Keyboard.DOWN ||
+          key.keyCode === Phaser.Keyboard.S ||
+          key.keyCode === Phaser.Keyboard.J) ) {
+        this.grid[this.keyboardPosition.x][this.keyboardPosition.y + 1].click();
+      }
+      if (this.tagEnd !== null && this.tagEnd.y > 0 &&
+          (key.keyCode === Phaser.Keyboard.UP ||
+          key.keyCode === Phaser.Keyboard.W ||
+          key.keyCode === Phaser.Keyboard.K) ) {
+        this.grid[this.keyboardPosition.x][this.keyboardPosition.y - 1].click();
+      }
+      if (old.x !== this.keyboardPosition.x || old.y !== this.keyboardPosition.y) {
+        this.updatePointer();
+      }
+    } else {
+      if (key.keyCode === Phaser.Keyboard.V ||
+          key.keyCode === Phaser.Keyboard.I) {
+        this.grid[this.keyboardPosition.x][this.keyboardPosition.y].click();
+      }
+      if (key.keyCode === Phaser.Keyboard.RIGHT ||
+          key.keyCode === Phaser.Keyboard.D ||
+          key.keyCode === Phaser.Keyboard.L ) {
+        this.keyboardPosition.x = (this.keyboardPosition.x + 1) % 8;
+        this.updatePointer();
+      }
+      if (key.keyCode === Phaser.Keyboard.LEFT ||
+          key.keyCode === Phaser.Keyboard.A ||
+          key.keyCode === Phaser.Keyboard.H ) {
+        this.keyboardPosition.x = (this.keyboardPosition.x + 7) % 8;
+        this.updatePointer();
+      }
+      if (key.keyCode === Phaser.Keyboard.DOWN ||
+          key.keyCode === Phaser.Keyboard.S ||
+          key.keyCode === Phaser.Keyboard.J ) {
+        this.keyboardPosition.y = (this.keyboardPosition.y + 1) % 8;
+        this.updatePointer();
+      }
+      if (key.keyCode === Phaser.Keyboard.UP ||
+          key.keyCode === Phaser.Keyboard.W ||
+          key.keyCode === Phaser.Keyboard.K ) {
+        this.keyboardPosition.y = (this.keyboardPosition.y + 7) % 8;
+        this.updatePointer();
+      }
+    }
+  },
+
+  updatePointer: function () {
+    this.pointer.x = 60 + this.keyboardPosition.x * 120;
+    this.pointer.y = 378 + this.keyboardPosition.y * 120;
+  },
+
+  enableKeyboard: function () {
+    if (this.keyboardEnabled) {
+      return;
+    } else {
+      this.keyboardEnabled = true;
+      this.pointer = this.add.sprite(0, 0, "pointer");
+      this.updatePointer();
+      this.pointer.anchor.setTo(0.5, 0.5)
+      this.pointer.animations.add("stroll", null, 10, true);
+      this.pointer.play("stroll");
+    }
   },
 
   clearSelection: function() {
@@ -395,15 +503,16 @@ BasicGame.Game.prototype = {
     this.pauseStuff.push(pauseLine);
 
     this.game.paused = true;
-    this.game.input.onDown.add(unpause, this);
-    function unpause(event) {
-      if (this.game.paused) {
-        for (var i = 0; i < this.pauseStuff.length; i++) {
-          this.pauseStuff[i].destroy();
-        }
-        this.optionsButton.frame = 2;
-        this.game.paused = false;
+    this.game.input.onDown.add(this.unpause, this);
+  },
+
+  unpause: function (event) {
+    if (this.game.paused) {
+      for (var i = 0; i < this.pauseStuff.length; i++) {
+        this.pauseStuff[i].destroy();
       }
+      this.optionsButton.frame = 2;
+      this.game.paused = false;
     }
   },
 
@@ -446,6 +555,9 @@ BasicGame.Game.prototype = {
           }
           this.lastClicked = over;
         }
+      }
+      if (this.keyboardEnabled) {
+        this.updatePointer();
       }
     } else if (pointer.isUp) {
       this.dragging = false;
@@ -812,6 +924,7 @@ BasicGame.Game.prototype = {
       this.add.text(480, 960, "Tap/click to return to main menu", { font: "32px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
       this.overlay.inputEnabled = true;
       this.overlay.events.onInputDown.add(this.quitGame, this);
+      this.input.keyboard.addCallbacks(this, this.quitGame);
     }, this);
 
     this.addSocialBar();
