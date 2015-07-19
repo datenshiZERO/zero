@@ -16,6 +16,7 @@
   <meta property="og:image:height" content="245" />
   <%= stylesheet_link_tag "normalize", "main" %>
   <%= favicon_tag 'images/favicon.ico' %>
+  <%= javascript_include_tag 'main' %>
 </head>
 <body>
   <div id="fb-root"></div>
@@ -121,7 +122,6 @@
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <g:plusone></g:plusone>
 
-  <%= javascript_include_tag 'main' %>
 <% if build? %>
   <!-- Piwik -->
   <script type="text/javascript">
