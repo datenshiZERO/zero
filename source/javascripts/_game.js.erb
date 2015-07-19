@@ -3,6 +3,7 @@ Store = new Persist.Store('High Score');
 Cell = function (state, game, x, y) {
   this.state = state;
   this.grid = state.grid;
+  this.rnd = game.rnd;
   this.game = game;
   this.x = x;
   this.y = y;
@@ -45,7 +46,7 @@ Cell.prototype = {
   },
 
   roll: function() {
-    this.value = (Math.floor(Math.random() * 9) + 1);
+    this.value = this.rnd.between(1, 9);
     this.circle.frame = this.value - 1;
   },
 
@@ -748,8 +749,8 @@ BasicGame.Game.prototype = {
     var removed = 0;
     for (var i = 0; i < length; i++) {
       // per digit, there's a 1 in 5 chance of removing a block
-      if (Math.random() * 5 < 1) {
-        var delIdx = Math.floor(Math.random() * this.blockers.length);
+      if (this.rnd.between(1, 5) == 1) {
+        var delIdx = this.rnd.between(0, this.blockers.length - 1);
         // reroll selected
         this.blockers[delIdx].removeBlocker();
         // remove from list
@@ -770,11 +771,11 @@ BasicGame.Game.prototype = {
     var added = 0;
     for (var i = 0; i < length; i++) {
       // per digit, there's a 1 in 5 chance of removing a block
-      if (Math.random() * 4 < 1) {
+      if (this.rnd.between(1, 4) == 1) {
         var cell = null;
         while (cell === null) {
-          var x = Math.floor(Math.random() * 8);
-          var y = Math.floor(Math.random() * 8);
+          var x = this.rnd.between(0, 7);
+          var y = this.rnd.between(0, 7);
           if (this.grid[x][y].value !== 0) {
             cell = this.grid[x][y];
           }
@@ -834,7 +835,7 @@ BasicGame.Game.prototype = {
     var scoreStr = "" + this.score;
     for (var j = 0; j < 10 && j < scoreStr.length; j++) {
       this.milText[j].x = 160 + (scoreStr.length / 2 * 38) - (j * 38);
-      this.milText[j].style.fill = this.colorTable[Math.floor(Math.random() * 10)];
+      this.milText[j].style.fill = this.colorTable[this.rnd.between(0, 9)];
       this.milText[j].text = scoreStr.substr(scoreStr.length - 1 - j, 1);
     }
   },
