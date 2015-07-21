@@ -17,10 +17,10 @@ When the sum of the chain ends in zero (e.g. 40, 130) you get rewards and side e
 *   if it's _Composite_ (e.g. chain length is 4, 6, or 8 digits long), you gain 2 seconds on your time for each digit connected. However, each digit also gives you a 1 in 4 chance of replacing a digit in the grid with a **blocker**, a black cell that cannot be selected and added to the chain.
 *   if it's _Prime_ (e.g. 2, 3, 5), you only gain 0.5 seconds for each digit, but instead of spawning blockers, each digit now has a 1 in 5 chance of removing a blocker in the grid.
 
-Either way, the point value of the chain is `5 x (sum / 10)<sup>3</sup>`. Some examples:
+Either way, the point value of the chain is `5 x (sum / 10)^3`. Some examples:
 
-*   `1-2-3-4` - gives you 5 points (10 / 10 = 1, 5 x 1<sup>3</sup> = 5) and 8 extra seconds but has 4 chances of spawning blockers.
-*   `9-3-8` - gives you 40 points (20 / 10 = 2, 5 x 2<sup>3</sup> = 40), 1.5 extra seconds, and 3 chances to clear blockers.
+*   `1-2-3-4` - gives you 5 points (10 / 10 = 1, 5 x 1^3 = 5) and 8 extra seconds but has 4 chances of spawning blockers.
+*   `9-3-8` - gives you 40 points (20 / 10 = 2, 5 x 2^3 = 40), 1.5 extra seconds, and 3 chances to clear blockers.
 
 Game ends when the time runs out. The goal is 1 million points, but the game will not stop you from playing when you reach that point.
 
