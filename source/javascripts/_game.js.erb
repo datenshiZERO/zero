@@ -213,6 +213,21 @@ BasicGame.Game.prototype = {
 
   create: function () {
 
+    this.game.mod = 10;
+    this.game.primeRewardSec = 0.5;
+    this.game.compositeRewardSec = 2.0;
+
+    if (this.game.mode === "PUZZLE") {
+    } else if (this.game.mode === "MOD7") {
+      this.game.mod = 7;
+    } else if (this.game.mode === "FOCUS") {
+      this.game.spawnChance = 3;
+      this.game.primeRewardSec = 0.0;
+      this.game.compositeRewardSec = 1.0;
+    } else {
+      this.game.mode = "";
+    }
+
     this.stage.backgroundColor = '#ddd';
 
     this.grid = [];
@@ -244,7 +259,7 @@ BasicGame.Game.prototype = {
       this.endGame(0);
     }, this);
 
-    this.prevHighScore = Store.get("highScore");
+    this.prevHighScore = Store.get(this.game.mode + "highScore");
     if (this.prevHighScore === null) {
       this.prevHighScore = 0;
     } else {
@@ -253,15 +268,17 @@ BasicGame.Game.prototype = {
 
     this.curHighScore = this.prevHighScore;
 
-    this.prevBestTime = Store.get("bestTime");
+    this.prevBestTime = Store.get(this.game.mode + "bestTime");
     if (this.prevBestTime === null) {
       this.prevBestTime = 90.0;
     } else {
       this.prevBestTime = parseFloat(this.prevBestTime);
     }
 
-    this.prevMillionTime = Store.get("bestMillionTime");
+    this.prevMillionTime = Store.get(this.game.mode + "bestMillionTime");
     this.millionTime = null;
+
+    this.add.text(30, 25, this.game.mode, { font: "40px Roboto Mono", fill: "#222"});
 
     this.highScoreText = this.add.text(480, 55, "HIGH SCORE: " + this.prevHighScore, { font: "30px Roboto Mono", fill: "#222"});
     this.highScoreText.anchor.setTo(0.5, 0.5);
@@ -606,7 +623,7 @@ BasicGame.Game.prototype = {
       }
 
       if (this.score > this.curHighScore) {
-        Store.set("highScore", this.score);
+        Store.set(this.game.mode + "highScore", this.score);
         this.highScoreText.text = "HIGH SCORE: " + this.score;
         var highScoreText = this.highScoreGroup.getFirstExists(false);
         if (highScoreText !== null) {
@@ -660,9 +677,9 @@ BasicGame.Game.prototype = {
       if (this.primeTable[length]) {
         var removed = this.rollBlockRemoval(length);
 
-        this.timeLimit += length * 1.0 / 2;
-        this.modifyTimer(length * 500);
-        addTime = "+" + Math.floor(length / 2);
+        this.timeLimit += length * this.game.primeRewardSec;
+        this.modifyTimer(length * Math.floor(this.game.primeRewardSec * 1000));
+        addTime = "+" + Math.floor(length * this.game.primeRewardSec);
 
         clearMessage = length + " - Prime";
         if (removed > 0) {
@@ -672,9 +689,9 @@ BasicGame.Game.prototype = {
       } else {
         var added = this.rollBlockCreation(length);
 
-        this.timeLimit += length * 2;
-        this.modifyTimer(length * 2000);
-        addTime = "+" + length * 2;
+        this.timeLimit += length * this.game.compositeRewardSec;
+        this.modifyTimer(length * Math.floor(this.game.compositeRewardSec * 1000));
+        addTime = "+" + Math.floor(length * this.game.compositeRewardSec);
 
         clearMessage = length + " - Composite";
         if (added > 0) {
@@ -711,11 +728,11 @@ BasicGame.Game.prototype = {
       }
 
       if (this.timeLimit > this.prevBestTime) {
-        Store.set("bestTime", this.timeLimit);
+        Store.set(this.game.mode + "bestTime", this.timeLimit);
       }
 
       var addTimeText = this.addTimeGroup.getFirstExists(false);
-      if (addTimeText !== null) {
+      if (addTimeText !== null && addTime !== "+0") {
         addTimeText.reset(780, 100);
         addTimeText.text = addTime;
         addTimeText.alpha = 1;
@@ -875,7 +892,7 @@ BasicGame.Game.prototype = {
     if (this.millionTime !== null && 
         ( (this.prevMillionTime !== null && parseFloat(this.prevMillionTime) > this.millionTime) ||
           (this.prevMillionTime === null) ) ) {
-      Store.set("bestMillionTime", this.millionTime);
+      Store.set(this.game.mode + "bestMillionTime", this.millionTime);
       newMillionTime = true;
     }
     

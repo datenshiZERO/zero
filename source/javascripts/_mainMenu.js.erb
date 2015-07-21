@@ -22,40 +22,171 @@ BasicGame.MainMenu.prototype = {
     }
     if (this.page === "main") {
       this.addCenteredText(280, 150, "zero");
-      var startGame = this.addCenteredText(800, 60, "START GAME");
-      startGame.inputEnabled = true;
-      startGame.events.onInputDown.add(function () { this.startGame() }, this);
-      var howToPlay = this.addCenteredText(900, 60, "HOW TO PLAY");
-      howToPlay.inputEnabled = true;
-      howToPlay.events.onInputDown.add(function () { this.changePage("rules") }, this);
-      this.addCenteredText(1000, 28, "CHALLENGES");
-      var mod7 = this.addCenteredText(1050, 60, "MOD7");
-      mod7.inputEnabled = true;
-      mod7.events.onInputDown.add(function () { 
-        this.game.mod = 7;
-        this.startGame() 
-      }, this);
+      var text = this.addCenteredText(650, 50, "START GAME");
+      text.inputEnabled = true;
+      text.events.onInputDown.add(function () { this.startGame() }, this);
+      text = this.addCenteredText(750, 50, "HOW TO PLAY");
+      text.inputEnabled = true;
+      text.events.onInputDown.add(function () { this.changePage("rules") }, this);
+      text = this.addCenteredText(850, 50, "OTHER GAME MODES");
+      text.inputEnabled = true;
+      text.events.onInputDown.add(function () { this.changePage("modes") }, this);
+      text = this.addCenteredText(950, 50, "CREDITS");
+      text.inputEnabled = true;
+      text.events.onInputDown.add(function () { this.changePage("credits") }, this);
       this.addCenteredText(this.game.height - 75, 20, "v1.2.2");
       this.addCenteredText(this.game.height - 50, 20, "Copyright (c) 2015 Bryan Bibat");
     }
     if (this.page === "rules") {
-      this.addCenteredText(360, 30, "connect digits so the sum ends in zero");
-      this.addCenteredText(400, 30, "the higher the sum, the greater the points");
-      this.addCenteredText(440, 30, "tap/click/drag to select or unselect digits");
-      this.addCenteredText(540, 30, "each digit gives two extra seconds but");
-      this.addCenteredText(580, 30, "has a chance to create blockers");
+      this.addCenteredText(200, 60, "How to Play");
+      this.addText(80, 360, 30, "Your goal is to reach a million points.");
+      this.addText(80, 400, 30, "The game ends when the time runs out.");
 
-      this.addCenteredText(620, 30, "digits from prime length chains can clear");
-      this.addCenteredText(660, 30, "blockers but only give a half second each");
+      this.addText(80, 480, 30, "Click/tap numbers to connect them to a chain.");
+      this.addText(80, 520, 30, "You can only connect numbers that are at the");
+      this.addText(80, 560, 30, "left, right, top, or bottom of the last digit.");
 
-      this.addCenteredText(760, 30, "aim for one million points");
+      this.addText(80, 640, 30, "You can also drag/swipe through the numbers.");
+      this.addText(80, 720, 30, "To unselect numbers, simply click either the");
+      this.addText(80, 760, 30, "last number or the second to the last number.");
+      this.addText(80, 800, 30, "Clicking the X button at the upper left also");
+      this.addText(80, 840, 30, "clears the entire chain.");
+      var next = this.addText(600, 1000, 45, "Next Page");
+      next.inputEnabled = true;
+      next.events.onInputDown.add(function () { this.changePage("rules-2") }, this);
+      var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
+      back.inputEnabled = true;
+      back.events.onInputDown.add(function () { this.changePage("main") }, this);
+    }
+    if (this.page === "rules-2") {
+      this.addCenteredText(200, 60, "Point System (1/2)");
+      this.addText(60, 340, 30, "When the sum of the chain ends in zero (e.g.");
+      this.addText(60, 380, 30, "40, 130), the numbers are removed and replaced");
+      this.addText(60, 420, 30, "with new ones. You also receive points and side");
+      this.addText(60, 460, 30, "effects depending on whether the chain's length");
+      this.addText(60, 500, 30, "is PRIME or COMPOSITE.");
+
+      this.addText(60, 580, 30, "The point value of the chain is 5 x (sum / 10)");
+      this.addText(890, 570, 15, "3");
+
+      this.addText(60, 660, 30, "For composite (e.g. 4, 6, 9), you gain 2 extra");
+      this.addText(60, 700, 30, "seconds for each number. However, each number");
+      this.addText(60, 740, 30, "also has a 25% chance to create a BLOCKER, a");
+      this.addText(60, 780, 30, "black cell that cannot be selected.");
+
+      this.addText(60, 820, 30, "For prime (e.g. 2, 3, 5), you gain only 0.5");
+      this.addText(60, 860, 30, "seconds for each number. This time, each number");
+      this.addText(60, 900, 30, "has a 20% chance to remove a blocker.");
+      var prev = this.addText(100, 1000, 45, "Prev Page");
+      prev.inputEnabled = true;
+      prev.events.onInputDown.add(function () { this.changePage("rules") }, this);
+      var next = this.addText(600, 1000, 45, "Next Page");
+      next.inputEnabled = true;
+      next.events.onInputDown.add(function () { this.changePage("rules-3") }, this);
+      var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
+      back.inputEnabled = true;
+      back.events.onInputDown.add(function () { this.changePage("main") }, this);
+    }
+    if (this.page === "rules-3") {
+      this.addCenteredText(200, 60, "Point System (2/2)");
+      this.addText(60, 300, 30, "Examples:");
+      this.addText(60, 380, 30, "1 - 2 - 3 - 4");
+      this.addText(60, 420, 30, "5 points (10/10 = 1, 5 x 1  = 5)");
+      this.addText(530, 410, 15, "3");
+      this.addText(60, 460, 30, "8 extra seconds");
+      this.addText(60, 500, 30, "4 chances to create blockers");
+
+      this.addText(60, 580, 30, "9 - 3 - 8");
+      this.addText(60, 620, 30, "40 points (20/10 = 2, 5 x 2  = 40)");
+      this.addText(550, 610, 15, "3");
+      this.addText(60, 660, 30, "1.5 extra seconds");
+      this.addText(60, 700, 30, "3 chances to clear blockers");
+
+      this.addText(60, 780, 30, "8 - 9 - 7 - 7 - 2 - 5 - 6 - 3 - 3");
+      this.addText(60, 820, 30, "625 points (50/10 = 2, 5 x 5  = 625)");
+      this.addText(570, 810, 15, "3");
+      this.addText(60, 860, 30, "18 extra seconds");
+      this.addText(60, 900, 30, "9 chances to create blockers");
+
+      var prev = this.addText(100, 1000, 45, "Prev Page");
+      prev.inputEnabled = true;
+      prev.events.onInputDown.add(function () { this.changePage("rules-2") }, this);
+      var next = this.addText(600, 1000, 45, "Next Page");
+      next.inputEnabled = true;
+      next.events.onInputDown.add(function () { this.changePage("rules-4") }, this);
+      var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
+      back.inputEnabled = true;
+      back.events.onInputDown.add(function () { this.changePage("main") }, this);
+    }
+    if (this.page === "rules-4") {
+      this.addCenteredText(200, 60, "Keyboard Commands");
+      this.addText(100, 360, 30, "Movement:");
+      this.addText(100, 400, 30, "Arrow Keys or WASD or HJKL");
+
+      this.addText(100, 480, 30, "Number Selection:");
+      this.addText(100, 520, 30, "Spacebar or Enter");
+      this.addText(100, 600, 30, "Start Selection (vi inspired):");
+      this.addText(100, 640, 30, "I or V");
+      this.addText(100, 720, 30, "Clear Selection:");
+      this.addText(100, 760, 30, "R or Escape");
+      this.addText(100, 840, 30, "Pause: ");
+      this.addText(100, 880, 30, "P (any key to unpause)");
+
+      var prev = this.addText(100, 1000, 45, "Prev Page");
+      prev.inputEnabled = true;
+      prev.events.onInputDown.add(function () { this.changePage("rules-3") }, this);
+      var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
+      back.inputEnabled = true;
+      back.events.onInputDown.add(function () { this.changePage("main") }, this);
+    }
+    if (this.page === "modes") {
+      this.addCenteredText(200, 60, "Other Game Modes");
+      this.addText(60, 300, 30, "Try out the other game modes if you find the");
+      this.addText(60, 340, 30, "game too easy or too hard:");
+
+      var button = this.addCenteredText(420, 50, "PUZZLE");
+      this.setAsModeButton(button, "PUZZLE");
+      this.addText(60, 480, 30, "No time limit. Performance based on how many");
+      this.addText(60, 520, 30, "moves it took for you to get to 1 million.");
+
+      button = this.addCenteredText(620, 50, "MOD 7");
+      this.setAsModeButton(button, "MOD7");
+      this.addText(60, 680, 30, "Instead of dividing by 10, sum is now divided");
+      this.addText(60, 720, 30, "by 7. Numbers also limited to 1 - 6.");
+
+      button = this.addCenteredText(820, 50, "FOCUS");
+      this.setAsModeButton(button, "FOCUS");
+      this.addText(60, 880, 30, "Blocker spawn rate increased to 33%. Time bonus");
+      this.addText(60, 920, 30, "reduced to 1 second for composites and totally");
+      this.addText(60, 960, 30, "removed for primes.");
+
+      var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
+      back.inputEnabled = true;
+      back.events.onInputDown.add(function () { this.changePage("main") }, this);
+    }
+    if (this.page === "credits") {
+      this.addCenteredText(200, 60, "Credits");
+      this.addCenteredText(360, 30, "zero v1.2.2");
+      this.addCenteredText(400, 30, "Copyright (c) 2015 Bryan Bibat");
+      this.addCenteredText(440, 30, "MIT licensed code available at");
+      this.setAsLink(this.addCenteredText(480, 30, "https://github.com/datenshiZERO/zero"));
+
+      this.addCenteredText(560, 30, "Made with Phaser 2.4.0-RC2");
+      this.setAsLink(this.addCenteredText(600, 30, "http://phaser.io"));
+
+      this.addCenteredText(680, 30, "Icons from Open Iconic");
+      this.setAsLink(this.addCenteredText(720, 30, "http://www.useiconic.com/open"));
+
+      this.addCenteredText(800, 30, "For bug reports and feature suggestions,");
+      this.addCenteredText(840, 30, "please use the GitHub link above");
+
       var back = this.addCenteredText(this.game.height / 2 + 455, 60, "Back To Main");
       back.inputEnabled = true;
       back.events.onInputDown.add(function () { this.changePage("main") }, this);
     }
   },
 
-  addCenteredText: function (y, size, text) {
+  addCenteredText: function (y, size, text, link) {
     var text = this.add.text(
       this.game.width / 2, y, text, 
       { font: size + "px Roboto Mono", fill: "#444", align: "center" }
@@ -63,6 +194,33 @@ BasicGame.MainMenu.prototype = {
     text.anchor.setTo(0.5, 0.5);
     this.pageTexts.push(text);
     return text;
+  },
+
+  addText: function (x, y, size, text, link) {
+    var text = this.add.text(
+      x, y, text, 
+      { font: size + "px Roboto Mono", fill: "#444", align: "center" }
+    );
+    text.anchor.setTo(0, 0.5);
+    this.pageTexts.push(text);
+    return text;
+  },
+
+  setAsModeButton: function (button, mode) {
+    button.inputEnabled = true;
+    button.events.onInputDown.add(function () { 
+       this.game.mode = mode;
+       this.startGame() 
+    }, this);
+  },
+
+  setAsLink: function (button) {
+    button.style.fill = "#00b";
+    button.inputEnabled = true;
+    button.events.onInputDown.add(function () { 
+       var win = window.open(this, '_blank');
+       win.focus();  
+    }, button.text);
   },
 
   update: function () {
@@ -76,9 +234,6 @@ BasicGame.MainMenu.prototype = {
 
   startGame: function (pointer) {
 
-    if (this.game.mod === undefined || this.game.mod === null) {
-      this.game.mod = 10;
-    }
     this.state.start('Game');
 
   }
