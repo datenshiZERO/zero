@@ -30,72 +30,16 @@
 
   <h1>zero - a mathematical puzzle game</h1>
 
+  <div id="game-container"></div>
+
   <p>If you:</p>
   <ul>
     <li>are playing on mobile</li>
-    <li>want to figure out puzzle games by themselves</li>
-    <li>want to use keyboard controls mentioned at the bottom of the page</li>
+    <li>want to use keyboard controls</li>
     <li>are annoyed that dragging changes your mouse pointer to a selection pointer</li>
   </ul>
 
   <p><a href="/full">Please use this game-only version for the best playing experience.</a></p>
-
-  <hr>
-
-  <div id="game-container"></div>
-
-  <hr>
-
-  <h2>Longer Explanation of the Rules</h2>
-
-  <p><em>By popular demand, here's the mechanics explained.</em></p>
-
-  <p>Click/tap numbers to connect them to a chain. You can only connect numbers that are at the left, right, top, bottom of the last selected number. As a faster alternative, you can also drag/swipe through the numbers. Clicking the <strong>X</strong> button at the upper left clears the current chain.</p>
-
-  <p>When the sum of the chain ends in zero (e.g. 40, 130) you get rewards and side effects depending on whether the chain's length is composite or prime.<p>
-
-  <ul>
-    <li>if it's <em>Composite</em> (e.g. chain length is 4, 6, or 8 digits long), you gain 2 seconds on your time for each digit connected. However, each digit also gives you a 1 in 4 chance of replacing a digit in the grid with a <strong>blocker</strong>, a black cell that cannot be selected and added to the chain.</li>
-    <li>if it's <em>Prime</em> (e.g. 2, 3, 5), you only gain 0.5 seconds for each digit, but instead of spawning blockers, each digit now has a 1 in 5 chance of removing a blocker in the grid.</li>
-  </ul>
-
-  <p>Either way, the point value of the chain is <code>5 x (sum / 10)<sup>3</sup></code>. Some examples:</p>
-
-  <ul>
-    <li><code>1-2-3-4</code> - gives you 5 points (10 / 10 = 1, 5 x 1<sup>3</sup> = 5) and 8 extra seconds but has 4 chances of spawning blockers. </li>
-    <li><code>9-3-8</code> - gives you 40 points (20 / 10 = 2, 5 x 2<sup>3</sup> = 40), 1.5 extra seconds, and 3 chances to clear blockers.</li>
-  </ul>
-
-  <p>Game ends when the time runs out. The goal is 1 million points, but the game will not stop you from playing when you reach that point.</p>
-
-  <p>My personal best for a million is around 45 minutes.</p>
-
-  <h2>Basic Tips</h2>
-
-  <p>Random clicking is an important part of the gameplay. Use whenever you need a lot of time.
-  
-  <p>The points you get from random clicking is (on the average) nowhere near what you get from carefully extending your chain so the former should not be your only strategy if you're going for good million times.</p>
-
-  <p>Dragging the chain is faster than clicking for both extending the chain and backtracking.</p>
-
-  <p>There are only a few combinations for 2 and 3 length chains. Remembering them will allow you to clear a few blockers without spending too much time.</p>
-
-  <p>The expected score for a full 64-length chain on a grid with even distribution of numbers from 1-9 only gives 163,840 points. Raising the average by even a small value can significantly increase that score.</p>
-
-  <h2>Planned features</h2>
-
-  <ul>
-    <li><strike><strong>Clear Selection button</strong> - to save time in backtracking a long dead-end chain</strike> - <em>done!</em></li>
-    <li><strike><strong>Pause button</strong> - the current timer is real time so you can't leave the game board like in other puzzle games</strike> - <em>done!</em></li>
-    <li><strike><strong>Keyboard controls</strong> - for people who have sworn off the mouse. (vim-ers? xmonad-ers? LOL)</strike> - <em>done!</em> The game can now be started by the Spacebar and the game can be played with various controls:
-      <ul>
-        <li>Usual - Arrow keys for movement, Spacebar or Enter for selection, <code>R</code> to clear the chain, <code>P</code> to pause, and any key to unpause.</li>
-        <li>Gaming - <code>WASD</code> for movement</li>
-        <li>vi - <code>HJKL</code> for movement, <code>I</code> or <code>V</code> to start the chain, and Escape to clear the chain.</li>
-      </ul>
-    </li>
-    <li><strong>Game Modes / Difficulty levels</strong> - Some find the game too hard, others too easy. Will make a different mode with no time limit and an unforgiving mode with higher blocker spawn rate, lower composite reward, and maybe new mechanics that ruins common strategies.</li>
-  </ul>
 
   <h2>Credits</h2>
 
@@ -107,22 +51,22 @@
 
   <p>Initial playtesting and player input by the #gaming Slack channel of the <a href="https://www.facebook.com/groups/phackers/">Phillippine Tech Hackers</a> community. Additional input from /r/WebGames and Hacker News.</p>
 
-  <h3>Obligatory Social Buttons</h3>
-  
-  <p><div class="fb-like" data-href="https://zero.karaniwan.org/" data-layout="button" data-action="like" data-show-faces="true" data-share="true"></div></p>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <p>
+    <div class="fb-like" data-href="https://zero.karaniwan.org/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://zero.karaniwan.org" data-text="Looking for a distraction? Try out &quot;zero&quot;, a simple mathematical puzzle game." data-via="bry_bibat">Tweet</a>
+    <a class="tumblr-share-button" data-color="blue" data-notes="right" href="https://embed.tumblr.com/share"></a>
+    <a href="//www.pinterest.com/pin/create/button/" data-pin-do="buttonBookmark"  data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a>
+    <g:plusone></g:plusone>
+  </p>
 
-  <p><a href="https://twitter.com/share" class="twitter-share-button" data-url="http://zero.karaniwan.org" data-text="Looking for a distraction? Try out &quot;zero&quot;, a simple mathematical puzzle game." data-via="bry_bibat">Tweet</a></p>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-  <p><a class="tumblr-share-button" data-color="blue" data-notes="right" href="https://embed.tumblr.com/share"></a></p>
   <script>!function(d,s,id){var js,ajs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://secure.assets.tumblr.com/share-button.js";ajs.parentNode.insertBefore(js,ajs);}}(document, "script", "tumblr-js");</script>
 
-  <p><a href="//www.pinterest.com/pin/create/button/" data-pin-do="buttonBookmark"  data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a></p>
-<!-- Please call pinit.js only once per page -->
-<script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
+  <!-- Please call pinit.js only once per page -->
+  <script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
 
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <g:plusone></g:plusone>
 
 <% if build? %>
   <!-- Piwik -->

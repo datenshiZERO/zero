@@ -34,7 +34,7 @@ BasicGame.MainMenu.prototype = {
       text = this.addCenteredText(950, 50, "CREDITS");
       text.inputEnabled = true;
       text.events.onInputDown.add(function () { this.changePage("credits") }, this);
-      this.addCenteredText(this.game.height - 75, 20, "v1.2.2");
+      this.addCenteredText(this.game.height - 75, 20, "v1.3");
       this.addCenteredText(this.game.height - 50, 20, "Copyright (c) 2015 Bryan Bibat");
     }
     if (this.page === "rules") {
@@ -166,7 +166,7 @@ BasicGame.MainMenu.prototype = {
     }
     if (this.page === "credits") {
       this.addCenteredText(200, 60, "Credits");
-      this.addCenteredText(360, 30, "zero v1.2.2");
+      this.addCenteredText(360, 30, "zero v1.3");
       this.addCenteredText(400, 30, "Copyright (c) 2015 Bryan Bibat");
       this.addCenteredText(440, 30, "MIT licensed code available at");
       this.setAsLink(this.addCenteredText(480, 30, "https://github.com/datenshiZERO/zero"));

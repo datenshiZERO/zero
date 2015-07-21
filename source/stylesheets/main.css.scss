@@ -8,11 +8,21 @@ body {
   color: #333;
 }
 
+.fb-like iframe {
+  margin-top: -4px;
+}
+
 @media (max-width: 767px) {
   body {
     width: 100%;
   }
   h1, h2, h3, p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media (min-width: 500px) {
+  div {
     padding-left: 10px;
     padding-right: 10px;
   }
