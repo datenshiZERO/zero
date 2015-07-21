@@ -253,11 +253,15 @@ BasicGame.Game.prototype = {
     this.tagEnd = null;
 
     this.score = 0;
-    this.timeLimit = 90.0;
+    if (this.game.mode === "PUZZLE") {
+      this.timeLimit = 0;
+    } else {
+      this.timeLimit = 90.0;
+      this.countDown = this.time.events.add(this.timeLimit * 1000, function () { 
+        this.endGame(0);
+      }, this);
+    }
 
-    this.countDown = this.time.events.add(this.timeLimit * 1000, function () { 
-      this.endGame(0);
-    }, this);
 
     this.prevHighScore = Store.get(this.game.mode + "highScore");
     if (this.prevHighScore === null) {
@@ -270,7 +274,11 @@ BasicGame.Game.prototype = {
 
     this.prevBestTime = Store.get(this.game.mode + "bestTime");
     if (this.prevBestTime === null) {
-      this.prevBestTime = 90.0;
+      if (this.game.mode === "PUZZLE") {
+        this.prevBestTime = 0;
+      } else {
+        this.prevBestTime = 90.0;
+      }
     } else {
       this.prevBestTime = parseFloat(this.prevBestTime);
     }
@@ -285,12 +293,15 @@ BasicGame.Game.prototype = {
 
     this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"});
     this.scoreHeader.anchor.setTo(0.5, 0.5);
-    this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    if (this.game.mode === "PUZZLE") {
+      this.add.text(780, 110, "MOVES", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    } else {
+      this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    }
     this.add.text(480, 110, "SUM", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
     this.scoreText = this.add.text(180, 160, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
-
 
     this.timeText = this.add.text(780, 160, this.timeLimit, { font: "60px Roboto Mono", fill: "#444"});
     this.timeText.anchor.setTo(0.5, 0.5);
@@ -492,13 +503,17 @@ BasicGame.Game.prototype = {
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
 
-    pauseLine = this.add.text(480, 590, "Time Elapsed", { font: "50px Roboto Mono", fill: "#222"});
-    pauseLine.anchor.setTo(0.5, 0.5);
-    this.pauseStuff.push(pauseLine);
+    if (this.game.mode !== "PUZZLE") {
+      pauseLine = this.add.text(480, 590, "Time Elapsed", { font: "50px Roboto Mono", fill: "#222"});
+      pauseLine.anchor.setTo(0.5, 0.5);
+      this.pauseStuff.push(pauseLine);
 
-    pauseLine = this.add.text(480, 650, this.timeToText(this.timeLimit - this.time.events.duration / 1000), { font: "42px Roboto Mono", fill: "#222"});
-    pauseLine.anchor.setTo(0.5, 0.5);
-    this.pauseStuff.push(pauseLine);
+      pauseLine = this.add.text(480, 650, this.timeToText(this.timeLimit - this.time.events.duration / 1000), { font: "42px Roboto Mono", fill: "#222"});
+      pauseLine.anchor.setTo(0.5, 0.5);
+      this.pauseStuff.push(pauseLine);
+    } else {
+      pauseLine.text += "(?)";
+    }
 
     pauseLine = this.add.text(480, 740, "Previous Bests", { font: "48px Roboto Mono", fill: "#222"});
     pauseLine.anchor.setTo(0.5, 0.5);
@@ -506,12 +521,18 @@ BasicGame.Game.prototype = {
     pauseLine = this.add.text(480, 800, "High Score - " + this.prevHighScore, { font: "36px Roboto Mono", fill: "#222"})
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
-    pauseLine = this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "36px Roboto Mono", fill: "#222"});
-    pauseLine.anchor.setTo(0.5, 0.5);
-    this.pauseStuff.push(pauseLine);
+    if (this.game.mode !== "PUZZLE") {
+      pauseLine = this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "36px Roboto Mono", fill: "#222"});
+      pauseLine.anchor.setTo(0.5, 0.5);
+      this.pauseStuff.push(pauseLine);
+    }
 
     if (this.prevMillionTime !== null) {
-      pauseLine = this.add.text(480, 900, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "36px Roboto Mono", fill: "#222"})
+      if (this.game.mode !== "PUZZLE") {
+        pauseLine = this.add.text(480, 900, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "36px Roboto Mono", fill: "#222"})
+      } else {
+        pauseLine = this.add.text(480, 850, "Fastest Million - " + this.prevMillionTime + " moves", { font: "36px Roboto Mono", fill: "#222"})
+      }
       pauseLine.anchor.setTo(0.5, 0.5);
       this.pauseStuff.push(pauseLine);
     }
@@ -535,22 +556,28 @@ BasicGame.Game.prototype = {
   },
 
   update: function () {
-    var timeLeft = this.time.events.duration / 1000;
-    if (timeLeft > 0 && this.blockers.length < 64) { 
-      var text = Math.floor(timeLeft);
-      if (text !== this.timeText.text) {
-        this.timeText.text = text;
-      }
+    if (this.game.mode !== "PUZZLE") {
+      var timeLeft = this.time.events.duration / 1000;
+      if (timeLeft > 0 && this.blockers.length < 64) { 
+        var text = Math.floor(timeLeft);
+        if (text !== this.timeText.text) {
+          this.timeText.text = text;
+        }
 
-      if (this.timeText.style.fill === '#444' && timeLeft < 16) {
-        this.timeText.style.fill = '#d44';
-        this.timeText.style.font = '700 65px Roboto Mono';
-      } else if (this.timeText.style.fill === '#d44' && timeLeft > 16) {
-        this.timeText.style.fill = '#444';
-        this.timeText.style.font = '60px Roboto Mono';
-      } 
-    } else if (this.gameRunning) {
-      this.endGame(timeLeft);
+        if (this.timeText.style.fill === '#444' && timeLeft < 16) {
+          this.timeText.style.fill = '#d44';
+          this.timeText.style.font = '700 65px Roboto Mono';
+        } else if (this.timeText.style.fill === '#d44' && timeLeft > 16) {
+          this.timeText.style.fill = '#444';
+          this.timeText.style.font = '60px Roboto Mono';
+        } 
+      } else if (this.gameRunning) {
+        this.endGame(timeLeft);
+      }
+    } else {
+      if (this.gameRunning && this.score >= 1000000) {
+        this.endGame(this.timeLimit);
+      }
     }
     this.handleDragging();
 
@@ -612,7 +639,11 @@ BasicGame.Game.prototype = {
         this.scoreText.text = this.score;
       } else {
         if (this.millionTime === null) {
-          this.millionTime = this.time.totalElapsedSeconds();
+          if (this.game.mode !== "PUZZLE") {
+            this.millionTime = this.timeLimit - this.time.events.duration / 1000;
+          } else {
+            this.millionTime = this.timeLimit + 1;
+          }
         }
         if (this.score <= 9999999999) {
           this.scoreHeader.text = "CONGRATULATIONS!";
@@ -677,9 +708,11 @@ BasicGame.Game.prototype = {
       if (this.primeTable[length]) {
         var removed = this.rollBlockRemoval(length);
 
-        this.timeLimit += length * this.game.primeRewardSec;
-        this.modifyTimer(length * Math.floor(this.game.primeRewardSec * 1000));
-        addTime = "+" + Math.floor(length * this.game.primeRewardSec);
+        if (this.game.mode !== "PUZZLE") {
+          this.timeLimit += length * this.game.primeRewardSec;
+          this.modifyTimer(length * Math.floor(this.game.primeRewardSec * 1000));
+          addTime = "+" + Math.floor(length * this.game.primeRewardSec);
+        }
 
         clearMessage = length + " - Prime";
         if (removed > 0) {
@@ -689,15 +722,22 @@ BasicGame.Game.prototype = {
       } else {
         var added = this.rollBlockCreation(length);
 
-        this.timeLimit += length * this.game.compositeRewardSec;
-        this.modifyTimer(length * Math.floor(this.game.compositeRewardSec * 1000));
-        addTime = "+" + Math.floor(length * this.game.compositeRewardSec);
+        if (this.game.mode !== "PUZZLE") {
+          this.timeLimit += length * this.game.compositeRewardSec;
+          this.modifyTimer(length * Math.floor(this.game.compositeRewardSec * 1000));
+          addTime = "+" + Math.floor(length * this.game.compositeRewardSec);
+        }
 
         clearMessage = length + " - Composite";
         if (added > 0) {
           blockerMessage = added + " blocker" + (added === 1 ? "" : "s") + " added";
           clearFill = "#a01";
         }
+      }
+      if (this.game.mode === "PUZZLE") {
+        this.timeLimit++;
+        addTime = "+1";
+        this.timeText.text = this.timeLimit;
       }
       
       var resultText = this.resultGroup.getFirstExists(false);
@@ -866,16 +906,24 @@ BasicGame.Game.prototype = {
 
     this.overlay = this.add.sprite(100, 300, "overlay");
 
-    this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    if (this.game.mode !== "PUZZLE") {
+      this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    } else {
+      this.add.text(480, 400, "You Win!", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    }
     
     var runText = null;
     var milText = null;
     if (this.millionTime !== null) { 
-      runText = this.add.text(480, 463, "Run Time - " + this.timeToText(this.timeLimit), { font: "30px Roboto Mono", fill: "#222"});
-      runText.anchor.setTo(0.5, 0.5);
-      milText = this.add.text(480, 497, "Million reached at " + this.timeToText(this.millionTime), { font: "30px Roboto Mono", fill: "#222"});
+      if (this.game.mode !== "PUZZLE") {
+        runText = this.add.text(480, 463, "Run Time - " + this.timeToText(this.timeLimit), { font: "30px Roboto Mono", fill: "#222"});
+        runText.anchor.setTo(0.5, 0.5);
+        milText = this.add.text(480, 497, "Million reached at " + this.timeToText(this.millionTime), { font: "30px Roboto Mono", fill: "#222"});
+      } else {
+        milText = this.add.text(480, 497, "Million reached in " + this.millionTime + " moves", { font: "30px Roboto Mono", fill: "#222"});
+      }
       milText.anchor.setTo(0.5, 0.5);
-    } else {
+    } else if (this.game.mode !== "PUZZLE") {
       runText = this.add.text(480, 480, "Run Time: " + this.timeToText(this.timeLimit), { font: "36px Roboto Mono", fill: "#222"});
       runText.anchor.setTo(0.5, 0.5);
     }
@@ -885,7 +933,7 @@ BasicGame.Game.prototype = {
       newHighScore = true;
     }
     var newBestTime = false;
-    if (this.timeLimit > this.prevBestTime) {
+    if (this.game.mode !== "PUZZLE" && this.timeLimit > this.prevBestTime) {
       newBestTime = true;
     }
     var newMillionTime = false;
@@ -932,10 +980,16 @@ BasicGame.Game.prototype = {
 
     this.add.text(480, 770, "Previous Bests", { font: "40px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
     this.add.text(480, 820, "High Score - " + this.prevHighScore, { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-    this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    if (this.game.mode !== "PUZZLE") {
+      this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    }
 
     if (this.prevMillionTime !== null) {
-      this.add.text(480, 880, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      if (this.game.mode !== "PUZZLE") {
+        this.add.text(480, 880, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      } else {
+        this.add.text(480, 850, "Fastest Million - " + this.prevMillionTime + " moves", { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      }
     }
 
     this.time.events.add(1000, function () {
