@@ -189,7 +189,7 @@ BasicGame.MainMenu.prototype = {
   addCenteredText: function (y, size, text, link) {
     var text = this.add.text(
       this.game.width / 2, y, text, 
-      { font: size + "px Roboto Mono", fill: "#444", align: "center" }
+      { font: size + "px Roboto Mono, monospace", fill: "#444", align: "center" }
     );
     text.anchor.setTo(0.5, 0.5);
     this.pageTexts.push(text);
@@ -199,7 +199,7 @@ BasicGame.MainMenu.prototype = {
   addText: function (x, y, size, text, link) {
     var text = this.add.text(
       x, y, text, 
-      { font: size + "px Roboto Mono", fill: "#444", align: "center" }
+      { font: size + "px Roboto Mono, monospace", fill: "#444", align: "center" }
     );
     text.anchor.setTo(0, 0.5);
     this.pageTexts.push(text);

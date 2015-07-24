@@ -286,24 +286,24 @@ BasicGame.Game.prototype = {
     this.prevMillionTime = Store.get(this.game.mode + "bestMillionTime");
     this.millionTime = null;
 
-    this.add.text(30, 25, this.game.mode, { font: "40px Roboto Mono", fill: "#222"});
+    this.add.text(30, 25, this.game.mode, { font: "40px Roboto Mono, monospace", fill: "#222"});
 
-    this.highScoreText = this.add.text(480, 55, "HIGH SCORE: " + this.prevHighScore, { font: "30px Roboto Mono", fill: "#222"});
+    this.highScoreText = this.add.text(480, 55, "HIGH SCORE: " + this.prevHighScore, { font: "30px Roboto Mono, monospace", fill: "#222"});
     this.highScoreText.anchor.setTo(0.5, 0.5);
 
-    this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono", fill: "#222"});
+    this.scoreHeader = this.add.text(180, 110, "SCORE", { font: "30px Roboto Mono, monospace", fill: "#222"});
     this.scoreHeader.anchor.setTo(0.5, 0.5);
     if (this.game.mode === "PUZZLE") {
-      this.add.text(780, 110, "MOVES", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(780, 110, "MOVES", { font: "30px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     } else {
-      this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(780, 110, "TIME LEFT", { font: "30px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     }
-    this.add.text(480, 110, "SUM", { font: "30px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(480, 110, "SUM", { font: "30px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
-    this.scoreText = this.add.text(180, 160, this.score, { font: "60px 'Roboto Mono'", fill: "#444"});
+    this.scoreText = this.add.text(180, 160, this.score, { font: "60px 'Roboto Mono', monospace", fill: "#444"});
     this.scoreText.anchor.setTo(0.5, 0.5);
 
-    this.timeText = this.add.text(780, 160, this.timeLimit, { font: "60px Roboto Mono", fill: "#444"});
+    this.timeText = this.add.text(780, 160, this.timeLimit, { font: "60px Roboto Mono, monospace", fill: "#444"});
     this.timeText.anchor.setTo(0.5, 0.5);
 
     this.addScoreGroup = this.add.group();
@@ -312,36 +312,36 @@ BasicGame.Game.prototype = {
     this.resultGroup = this.add.group();
     this.result2Group = this.add.group();
     for (var i = 0; i < 5; i++) {
-      var addScoreText = this.add.text(180, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
+      var addScoreText = this.add.text(180, 160, "", { font: "50px 'Roboto Mono', monospace", fill: "#080"});
       addScoreText.anchor.setTo(0.5, 0.5);
       addScoreText.kill();
       this.addScoreGroup.add(addScoreText);
 
-      var highScoreText = this.add.text(180, 55, "", { font: "30px 'Roboto Mono'", fill: "#080"});
+      var highScoreText = this.add.text(180, 55, "", { font: "30px 'Roboto Mono', monospace", fill: "#080"});
       highScoreText.anchor.setTo(0.5, 0.5);
       highScoreText.kill();
       this.highScoreGroup.add(highScoreText);
 
-      var addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono'", fill: "#080"});
+      var addTimeText = this.add.text(780, 160, "", { font: "50px 'Roboto Mono', monospace", fill: "#080"});
       addTimeText.anchor.setTo(0.5, 0.5);
       addTimeText.kill();
       this.addTimeGroup.add(addTimeText);
 
-      var resultText = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
+      var resultText = this.add.text(480, 250, "", { font: "40px 'Roboto Mono', monospace", fill: "#080"});
       resultText.anchor.setTo(0.5, 0.5);
       resultText.kill();
       this.resultGroup.add(resultText);
 
-      var result2Text = this.add.text(480, 250, "", { font: "40px 'Roboto Mono'", fill: "#080"});
+      var result2Text = this.add.text(480, 250, "", { font: "40px 'Roboto Mono', monospace", fill: "#080"});
       result2Text.anchor.setTo(0.5, 0.5);
       result2Text.kill();
       this.result2Group.add(result2Text);
     }
 
-    this.sumText = this.add.text(480, 190, '?', { font: "150px 'Roboto Mono'", fill: "#222"});
+    this.sumText = this.add.text(480, 190, '?', { font: "150px 'Roboto Mono', monospace", fill: "#222"});
     this.sumText.anchor.setTo(0.5, 0.5);
 
-    this.pointsText = this.add.text(480, 270, "0 digits, 0 points", { font: "30px Roboto Mono", fill: "#222"});
+    this.pointsText = this.add.text(480, 270, "0 digits, 0 points", { font: "30px Roboto Mono, monospace", fill: "#222"});
     this.pointsText.anchor.setTo(0.5, 0.5);
 
     this.clearButton = this.add.sprite(60, 270, "action-buttons");
@@ -499,45 +499,45 @@ BasicGame.Game.prototype = {
     this.pauseStuff.push(pauseOverlay);
 
 
-    var pauseLine = this.add.text(480, 420, "Game Paused", { font: "72px Roboto Mono", fill: "#222"});
+    var pauseLine = this.add.text(480, 420, "Game Paused", { font: "72px Roboto Mono, monospace", fill: "#222"});
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
 
     if (this.game.mode !== "PUZZLE") {
-      pauseLine = this.add.text(480, 590, "Time Elapsed", { font: "50px Roboto Mono", fill: "#222"});
+      pauseLine = this.add.text(480, 590, "Time Elapsed", { font: "50px Roboto Mono, monospace", fill: "#222"});
       pauseLine.anchor.setTo(0.5, 0.5);
       this.pauseStuff.push(pauseLine);
 
-      pauseLine = this.add.text(480, 650, this.timeToText(this.timeLimit - this.time.events.duration / 1000), { font: "42px Roboto Mono", fill: "#222"});
+      pauseLine = this.add.text(480, 650, this.timeToText(this.timeLimit - this.time.events.duration / 1000), { font: "42px Roboto Mono, monospace", fill: "#222"});
       pauseLine.anchor.setTo(0.5, 0.5);
       this.pauseStuff.push(pauseLine);
     } else {
       pauseLine.text += "(?)";
     }
 
-    pauseLine = this.add.text(480, 740, "Previous Bests", { font: "48px Roboto Mono", fill: "#222"});
+    pauseLine = this.add.text(480, 740, "Previous Bests", { font: "48px Roboto Mono, monospace", fill: "#222"});
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
-    pauseLine = this.add.text(480, 800, "High Score - " + this.prevHighScore, { font: "36px Roboto Mono", fill: "#222"})
+    pauseLine = this.add.text(480, 800, "High Score - " + this.prevHighScore, { font: "36px Roboto Mono, monospace", fill: "#222"})
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
     if (this.game.mode !== "PUZZLE") {
-      pauseLine = this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "36px Roboto Mono", fill: "#222"});
+      pauseLine = this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "36px Roboto Mono, monospace", fill: "#222"});
       pauseLine.anchor.setTo(0.5, 0.5);
       this.pauseStuff.push(pauseLine);
     }
 
     if (this.prevMillionTime !== null) {
       if (this.game.mode !== "PUZZLE") {
-        pauseLine = this.add.text(480, 900, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "36px Roboto Mono", fill: "#222"})
+        pauseLine = this.add.text(480, 900, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "36px Roboto Mono, monospace", fill: "#222"})
       } else {
-        pauseLine = this.add.text(480, 850, "Fastest Million - " + this.prevMillionTime + " moves", { font: "36px Roboto Mono", fill: "#222"})
+        pauseLine = this.add.text(480, 850, "Fastest Million - " + this.prevMillionTime + " moves", { font: "36px Roboto Mono, monospace", fill: "#222"})
       }
       pauseLine.anchor.setTo(0.5, 0.5);
       this.pauseStuff.push(pauseLine);
     }
 
-    pauseLine = this.add.text(480, 1100, "Tap/click to resume", { font: "50px Roboto Mono", fill: "#222"});
+    pauseLine = this.add.text(480, 1100, "Tap/click to resume", { font: "50px Roboto Mono, monospace", fill: "#222"});
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
 
@@ -884,7 +884,7 @@ BasicGame.Game.prototype = {
     if (this.milText === undefined || this.milText === null || !this.milText[0].alive) {
       this.milText = [];
       for (var i = 0; i < 10; i++) {
-        var text = this.add.text(180, 160, "", { font: "700 64px 'Roboto Mono'", fill: "#444"});
+        var text = this.add.text(180, 160, "", { font: "700 64px 'Roboto Mono', monospace", fill: "#444"});
         text.anchor.setTo(0.5, 0.5);
         this.milText.push(text);
       }
@@ -907,24 +907,24 @@ BasicGame.Game.prototype = {
     this.overlay = this.add.sprite(100, 300, "overlay");
 
     if (this.game.mode !== "PUZZLE") {
-      this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 400, "Game Over", { font: "64px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     } else {
-      this.add.text(480, 400, "You Win!", { font: "64px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 400, "You Win!", { font: "64px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     }
     
     var runText = null;
     var milText = null;
     if (this.millionTime !== null) { 
       if (this.game.mode !== "PUZZLE") {
-        runText = this.add.text(480, 463, "Run Time - " + this.timeToText(this.timeLimit), { font: "30px Roboto Mono", fill: "#222"});
+        runText = this.add.text(480, 463, "Run Time - " + this.timeToText(this.timeLimit), { font: "30px Roboto Mono, monospace", fill: "#222"});
         runText.anchor.setTo(0.5, 0.5);
-        milText = this.add.text(480, 497, "Million reached at " + this.timeToText(this.millionTime), { font: "30px Roboto Mono", fill: "#222"});
+        milText = this.add.text(480, 497, "Million reached at " + this.timeToText(this.millionTime), { font: "30px Roboto Mono, monospace", fill: "#222"});
       } else {
-        milText = this.add.text(480, 497, "Million reached in " + this.millionTime + " moves", { font: "30px Roboto Mono", fill: "#222"});
+        milText = this.add.text(480, 497, "Million reached in " + this.millionTime + " moves", { font: "30px Roboto Mono, monospace", fill: "#222"});
       }
       milText.anchor.setTo(0.5, 0.5);
     } else if (this.game.mode !== "PUZZLE") {
-      runText = this.add.text(480, 480, "Run Time: " + this.timeToText(this.timeLimit), { font: "36px Roboto Mono", fill: "#222"});
+      runText = this.add.text(480, 480, "Run Time: " + this.timeToText(this.timeLimit), { font: "36px Roboto Mono, monospace", fill: "#222"});
       runText.anchor.setTo(0.5, 0.5);
     }
 
@@ -947,30 +947,30 @@ BasicGame.Game.prototype = {
     if (newHighScore) {
       if (newBestTime) {
         if (newMillionTime) {
-          this.add.text(480, 570, "New High Score!", { font: "44px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-          this.add.text(480, 620, "New Longest Run!", { font: "44px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-          this.add.text(480, 670, "New Fastest Million!", { font: "44px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 570, "New High Score!", { font: "44px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 620, "New Longest Run!", { font: "44px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 670, "New Fastest Million!", { font: "44px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
         } else {
-          this.add.text(480, 595, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-          this.add.text(480, 645, "New Longest Run!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 595, "New High Score!", { font: "48px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 645, "New Longest Run!", { font: "48px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
         }
       } else {
         if (newMillionTime) {
-          this.add.text(480, 595, "New High Score!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-          this.add.text(480, 645, "New Fastest Million!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 595, "New High Score!", { font: "48px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 645, "New Fastest Million!", { font: "48px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
         } else {
-          this.add.text(480, 620, "New High Score!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+          this.add.text(480, 620, "New High Score!", { font: "56px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
         }
       }
     } else if (newBestTime) {
       if (newMillionTime) {
-        this.add.text(480, 595, "New Longest Run!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-        this.add.text(480, 645, "New Fastest Million!", { font: "48px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 595, "New Longest Run!", { font: "48px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 645, "New Fastest Million!", { font: "48px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
       } else {
-        this.add.text(480, 620, "New Longest Run!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 620, "New Longest Run!", { font: "56px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
       }
     } else if (newMillionTime) {
-      this.add.text(480, 620, "New Fastest Million!", { font: "56px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 620, "New Fastest Million!", { font: "56px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     } else {
       runText.y += 100;
       if (milText !== null) {
@@ -978,22 +978,22 @@ BasicGame.Game.prototype = {
       }
     }
 
-    this.add.text(480, 770, "Previous Bests", { font: "40px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
-    this.add.text(480, 820, "High Score - " + this.prevHighScore, { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(480, 770, "Previous Bests", { font: "40px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(480, 820, "High Score - " + this.prevHighScore, { font: "28px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     if (this.game.mode !== "PUZZLE") {
-      this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 850, "Longest Run - " + this.timeToText(this.prevBestTime), { font: "28px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
     }
 
     if (this.prevMillionTime !== null) {
       if (this.game.mode !== "PUZZLE") {
-        this.add.text(480, 880, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 880, "Fastest Million - " + this.timeToText(this.prevMillionTime, true), { font: "28px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
       } else {
-        this.add.text(480, 850, "Fastest Million - " + this.prevMillionTime + " moves", { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+        this.add.text(480, 850, "Fastest Million - " + this.prevMillionTime + " moves", { font: "28px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
       }
     }
 
     this.time.events.add(1000, function () {
-      this.add.text(480, 960, "Tap/click to return to main menu", { font: "32px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+      this.add.text(480, 960, "Tap/click to return to main menu", { font: "32px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
       this.overlay.inputEnabled = true;
       this.overlay.events.onInputDown.add(this.quitGame, this);
       this.input.keyboard.addCallbacks(this, this.quitGame);
@@ -1004,7 +1004,7 @@ BasicGame.Game.prototype = {
 
   addSocialBar: function() {
     this.add.sprite(100, 1080, "social");
-    this.add.text(480, 1100, "share this on", { font: "28px Roboto Mono", fill: "#222"}).anchor.setTo(0.5, 0.5);
+    this.add.text(480, 1100, "share this on", { font: "28px Roboto Mono, monospace", fill: "#222"}).anchor.setTo(0.5, 0.5);
 
     var fullUrl, ogUrl, text, url, icon;
 
