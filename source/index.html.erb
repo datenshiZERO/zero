@@ -5,85 +5,11 @@
   <meta content='IE=Edge,chrome=1' http-equiv='X-UA-Compatible'>
   <meta content='width=device-width, initial-scale=1.0' name='viewport'>
   <title>zero</title>
-  <meta property="fb:app_id" content="944062788970440" />
   <meta content='a mathematical puzzle game' name='description'>
-  <meta content='zero' property='og:title'>
-  <meta content='a mathematical puzzle game' property='og:description'>
-  <meta content='website' property='og:type'>
-  <meta content='http://zero.karaniwan.org/' property='og:url'>
-  <meta content='http://zero.karaniwan.org<%= image_path("screenshot.png") %>' property='og:image'>
-  <meta property="og:image:width" content="245" />
-  <meta property="og:image:height" content="245" />
-  <%= stylesheet_link_tag "normalize", "main" %>
+  <%= stylesheet_link_tag "normalize", "all" %>
   <%= favicon_tag 'images/favicon.ico' %>
-  <%= javascript_include_tag 'main' %>
 </head>
 <body>
-  <div id="fb-root"></div>
-  <script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4&appId=944062788970440";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
-
-  <h1>zero - a mathematical puzzle game</h1>
-
-  <p>If you:</p>
-  <ul>
-    <li>are playing on mobile</li>
-    <li>want to use keyboard controls</li>
-    <li>are annoyed that dragging changes your mouse pointer to a selection pointer</li>
-  </ul>
-
-  <p><a href="/full">Please use this game-only version for the best playing experience.</a></p>
-
-  <div id="game-container"></div>
-
-  <h2>Credits</h2>
-
-  <p><code>zero</code> &copy; 2015 <a href="http://bryanbibat.net">Bryan Bibat</a></p>
-
-  <p>The game uses <a href="http://phaser.io">Phaser</a> v2.4.0</p>
-
-  <p>Icons from Open Iconic — <a href="http://www.useiconic.com/open">www.useiconic.com/open</a></p>
-
-  <p>Initial playtesting and player input by the #gaming Slack channel of the <a href="https://www.facebook.com/groups/phackers/">Phillippine Tech Hackers</a> community. Additional input from /r/WebGames and Hacker News.</p>
-
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <p>
-    <div class="fb-like" data-href="https://zero.karaniwan.org/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://zero.karaniwan.org" data-text="Looking for a distraction? Try out &quot;zero&quot;, a simple mathematical puzzle game." data-via="bry_bibat">Tweet</a>
-    <a class="tumblr-share-button" data-color="blue" data-notes="right" href="https://embed.tumblr.com/share"></a>
-    <a href="//www.pinterest.com/pin/create/button/" data-pin-do="buttonBookmark"  data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a>
-    <g:plusone></g:plusone>
-  </p>
-
-  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-  <script>!function(d,s,id){var js,ajs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://secure.assets.tumblr.com/share-button.js";ajs.parentNode.insertBefore(js,ajs);}}(document, "script", "tumblr-js");</script>
-
-  <!-- Please call pinit.js only once per page -->
-  <script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
-
-
-<% if build? %>
-  <!-- Piwik -->
-  <script type="text/javascript">
-    var _paq = _paq || [];
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="//analytics.bryanbibat.net/";
-      _paq.push(['setTrackerUrl', u+'piwik.php']);
-      _paq.push(['setSiteId', 12]);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-    })();
-  </script>
-  <noscript><p><img src="//analytics.bryanbibat.net/piwik.php?idsite=12" style="border:0;" alt="" /></p></noscript>
-  <!-- End Piwik Code -->
-<% end %>
+<%= javascript_include_tag 'all' %>
 </body>
 </html>
