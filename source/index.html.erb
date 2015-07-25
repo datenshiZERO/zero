@@ -17,13 +17,6 @@ var admobid = {
     interstitial: "ca-app-pub-0384913034470234/9679244871"
 };
 function initApp() {
-  if (AdMob) {
-    AdMob.createBanner({
-      adId : admobid.banner,
-      position : AdMob.AD_POSITION.TOP_CENTER,
-      autoShow : true
-    });
-  }
 }
 document.addEventListener('deviceready', initApp, false);
 </script>
