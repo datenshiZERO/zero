@@ -10,6 +10,15 @@
   <%= favicon_tag 'images/favicon.ico' %>
 </head>
 <body>
+<script src="cordova.js"></script>
+<script>
+var bannerAdUnit = "ca-app-pub-0384913034470234/8202511677";
+var adUnitFullScreen = "ca-app-pub-0384913034470234/9679244871";
+var isOverlap = true;
+document.addEventListener("deviceready", function(){
+    window.admob.setUp(adUnit, adUnitFullScreen, isOverlap, false);
+}, false);
+</script>
 <%= javascript_include_tag 'all' %>
 </body>
 </html>
