@@ -5,19 +5,27 @@
   <meta content='IE=Edge,chrome=1' http-equiv='X-UA-Compatible'>
   <meta content='width=device-width, initial-scale=1.0' name='viewport'>
   <title>zero</title>
+  <script src="cordova.js"></script>
   <meta content='a mathematical puzzle game' name='description'>
   <%= stylesheet_link_tag "normalize", "all" %>
   <%= favicon_tag 'images/favicon.ico' %>
 </head>
 <body>
-<script src="cordova.js"></script>
 <script>
-var bannerAdUnit = "ca-app-pub-0384913034470234/8202511677";
-var adUnitFullScreen = "ca-app-pub-0384913034470234/9679244871";
-var isOverlap = true;
-document.addEventListener("deviceready", function(){
-    window.admob.setUp(adUnit, adUnitFullScreen, isOverlap, false);
-}, false);
+var admobid = { 
+    banner: "ca-app-pub-0384913034470234/8202511677",
+    interstitial: "ca-app-pub-0384913034470234/9679244871"
+};
+function initApp() {
+  if (AdMob) {
+    AdMob.createBanner({
+      adId : admobid.banner,
+      position : AdMob.AD_POSITION.TOP_CENTER,
+      autoShow : true
+    });
+  }
+}
+document.addEventListener('deviceready', initApp, false);
 </script>
 <%= javascript_include_tag 'all' %>
 </body>

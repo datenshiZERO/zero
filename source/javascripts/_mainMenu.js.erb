@@ -13,7 +13,13 @@ BasicGame.MainMenu.prototype = {
     this.stage.backgroundColor = '#ddd';
     this.pageTexts = [];
     this.changePage("main");
-    window.admob.showBannerAd('top-center', 'SMART_BANNER');
+    if (AdMob) {
+      AdMob.createBanner({
+        adId : admobid.banner,
+        position : AdMob.AD_POSITION.TOP_CENTER,
+        autoShow : true
+      });
+    }
   },
 
   changePage: function (page) {
@@ -236,7 +242,9 @@ BasicGame.MainMenu.prototype = {
 
   startGame: function (pointer) {
 
-    window.admob.hideBannerAd();
+    if (AdMob) {
+      AdMob.removeBanner();
+    }
     this.state.start('Game');
 
   }
