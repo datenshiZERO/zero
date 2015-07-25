@@ -5,5 +5,23 @@ body {
   background: #ccc;
 }
 
-@import url(http://fonts.googleapis.com/css?family=Roboto+Mono:300,700);
+@font-face {
+  font-family: 'Roboto Mono';
+  src: font-url('RobotoMono-Light.eot?#iefix') format('embedded-opentype'),  
+       font-url('RobotoMono-Light.woff') format('woff'), 
+       font-url('RobotoMono-Light.ttf')  format('truetype'), 
+       font-url('RobotoMono-Light.svg#RobotoMono-Light') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto Mono';
+  src: font-url('RobotoMono-Bold.eot?#iefix') format('embedded-opentype'),  
+       font-url('RobotoMono-Bold.woff') format('woff'), 
+       font-url('RobotoMono-Bold.ttf')  format('truetype'), 
+       font-url('RobotoMono-Bold.svg#RobotoMono-Bold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
 
