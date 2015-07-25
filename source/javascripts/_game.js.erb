@@ -537,7 +537,15 @@ BasicGame.Game.prototype = {
       this.pauseStuff.push(pauseLine);
     }
 
-    pauseLine = this.add.text(480, 1100, "Tap/click to resume", { font: "50px Roboto Mono, monospace", fill: "#222"});
+    pauseLine = this.add.text(480, 1010, "NEW GAME", { font: "50px Roboto Mono, monospace", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+    pauseLine = this.add.text(480, 1100, "GO BACK TO MAIN MENU", { font: "50px Roboto Mono, monospace", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+
+    pauseLine = this.add.text(480, 1200, "Tap/click anywhere else to resume", { font: "30px Roboto Mono, monospace", fill: "#222"});
     pauseLine.anchor.setTo(0.5, 0.5);
     this.pauseStuff.push(pauseLine);
 
@@ -552,6 +560,64 @@ BasicGame.Game.prototype = {
       }
       this.optionsButton.frame = 2;
       this.game.paused = false;
+      if (event.x > 360 && event.x < 600 && event.y > 980 && event.y < 1040) {
+        this.newGame = true;
+        this.promptUser();
+      } else if (event.x > 180 && event.x < 920 && event.y > 1070 && event.y < 1130) {
+        this.newGame = false;
+        this.promptUser();
+      }
+    }
+  },
+
+  promptUser: function () {
+    this.pauseStuff = [];
+    this.optionsButton.frame = 3;
+    var pauseOverlay = this.add.sprite(0, 300, "overlay");
+    pauseOverlay.scale.setTo(1.4, 1.3);
+    this.pauseStuff.push(pauseOverlay);
+
+    var pauseLine = this.add.text(480, 520, "Are you sure you want to", { font: "50px Roboto Mono, monospace", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    pauseLine = this.add.text(480, 590, (this.newGame ? "start a new game?" : "go back to main menu?"), { font: "50px Roboto Mono, monospace", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    pauseLine = this.add.text(240, 800, "YES", { font: "72px Roboto Mono, monospace", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    pauseLine = this.add.text(720, 800, "NO", { font: "72px Roboto Mono, monospace", fill: "#222"});
+    pauseLine.anchor.setTo(0.5, 0.5);
+    this.pauseStuff.push(pauseLine);
+
+    this.game.paused = true;
+    this.game.input.onDown.remove(this.unpause, this);
+    this.game.input.onDown.add(this.answerPrompt, this);
+  },
+
+  answerPrompt: function (event) {
+    var response = null;
+    if (event.x > 170 && event.x < 320 && event.y > 760 && event.y < 840) {
+      response = true;
+
+    } else if (event.x > 680 && event.x < 760 && event.y > 760 && event.y < 840) {
+      response = false;
+    }
+    if (response !== null) {
+      this.game.input.onDown.remove(this.answerPrompt, this);
+      for (var i = 0; i < this.pauseStuff.length; i++) {
+        this.pauseStuff[i].destroy();
+      }
+      this.optionsButton.frame = 2;
+      this.game.paused = false;
+      if (response) {
+        this.state.start(this.newGame ? "Game" : "MainMenu");
+      } else {
+        this.pauseGame();
+      }
     }
   },
 

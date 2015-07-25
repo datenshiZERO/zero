@@ -9,6 +9,7 @@ BasicGame.MainMenu = function (game) {
 BasicGame.MainMenu.prototype = {
 
   create: function () {
+    this.game.mode = null;
     this.stage.backgroundColor = '#ddd';
     this.pageTexts = [];
     this.changePage("main");
